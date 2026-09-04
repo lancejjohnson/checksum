@@ -48,11 +48,26 @@ claude CLI not found. Install manually inside Claude Code:
 EOF
     return 1
   fi
-  # Registering an already-known marketplace fails; refresh it instead.
-  claude plugin marketplace add "$ROOT" 2>/dev/null \
-    || claude plugin marketplace update checksum
-  claude plugin install checksum@checksum
-  echo "claude: installed checksum@checksum (marketplace: $ROOT)"
+  if out=$(claude plugin marketplace add "$ROOT" 2>&1); then
+    echo "claude: marketplace 'checksum' registered from $ROOT"
+  elif printf '%s' "$out" | grep -qi 'already'; then
+    # Already registered; refresh it to pick up local changes.
+    if ! claude plugin marketplace update checksum; then
+      printf '%s\n' "$out" >&2
+      echo "claude: FAILED to refresh existing marketplace" >&2
+      return 1
+    fi
+  else
+    printf '%s\n' "$out" >&2
+    echo "claude: FAILED to register marketplace from $ROOT" >&2
+    return 1
+  fi
+  if claude plugin install checksum@checksum; then
+    echo "claude: installed checksum@checksum"
+  else
+    echo "claude: FAILED to install checksum@checksum" >&2
+    return 1
+  fi
 }
 
 claude_uninstall() {
