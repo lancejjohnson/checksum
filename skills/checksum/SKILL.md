@@ -42,12 +42,18 @@ Say the classification out loud so the user can override it:
   State the question and probe in 2–3 sentences, get a nod, investigate cheaply,
   report a recommendation. Anything built is labeled throwaway. No artifacts.
 - **Light** — a small, bounded change to a flow that already exists in this repo.
-  Present a short design in chat (approach, files touched, how it will be checked),
-  **stop and wait for approval**, then implement using the execute phase's testing
-  policy and verify with the finish phase's evidence rules. No artifact files.
+  Most bug fixes and debugging outcomes land here. The full ceremony happens **in
+  chat, with no artifact files**: a short design (approach, files touched — and for
+  bugs, the reproduction and root cause) plus a chat plan (task list with
+  acceptance checks, per the plan skill's shaping rules). For small changes,
+  present both in one message with one approval; **stop and wait for the yes**,
+  then run execute and finish as normal, with the approved chat plan standing in
+  for the plan file.
 - **Full** — new capabilities, new components, interface changes, anything with
   persistence, security, concurrency, or external effects. All four phases with
-  written artifacts.
+  written artifacts. The artifact is what scales between light and full — the
+  ceremony (design thinking, acceptance checks, approval, verification) is
+  identical.
 
 When in doubt, take the heavier path. Complexity discovered mid-task upgrades the
 path — stop, say so, and step up. Nothing downgrades mid-task.
@@ -70,6 +76,10 @@ existing artifact directories. Then select the first phase that applies:
 
 A plan with `**Status:** Complete` is closed; a new request gets a new slug.
 Details and staleness rules: [references/lifecycle.md](references/lifecycle.md).
+
+Artifacts are working papers, not deliverables: **never stage or commit anything
+under the artifacts directory unless the user explicitly asks** — rules in
+lifecycle.md.
 
 ## Step 4: Hand off
 

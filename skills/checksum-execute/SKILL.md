@@ -8,15 +8,15 @@ description: Execute an approved checksum plan task by task with spec-anchored c
 Execute the plan as written; the thinking already happened. Your job here is
 faithful implementation, honest checks, and knowing when to stop and route back.
 
-Require preferences, a slug, and an Approved plan from the `checksum` router. Read
-the **entire plan and the design** before editing anything. If either is stale,
-inconsistent, or has a gap that blocks starting, return to the router — do not
-improvise around a broken plan. Honor every directive in the `## execute`
-preferences section.
+Require preferences and an approved plan from the `checksum` router — a plan file
+for full-weight work, the approved chat plan for light work. Read the **entire plan
+and the design** before editing anything. If either is stale, inconsistent, or has
+a gap that blocks starting, return to the router — do not improvise around a broken
+plan. Honor every directive in the `## execute` preferences section.
 
-Before the first edit: set the plan `**Status:** Active`, note any pre-existing
-uncommitted user changes (never mix them into your work), and create a task-tracker
-entry per unchecked task if the host has task tracking.
+Before the first edit: set the plan file `**Status:** Active` (light: the task
+tracker is the status), note any pre-existing uncommitted user changes (never mix
+them into your work), and create a task-tracker entry per unchecked task.
 
 ## Choose the delegation mode
 

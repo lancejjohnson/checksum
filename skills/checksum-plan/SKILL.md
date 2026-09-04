@@ -9,6 +9,10 @@ The plan translates an approved design into tasks an implementer can execute wit
 **zero conversation context** — a future session, a subagent, or the user's teammate.
 Everything they need lives in the plan or the design it links to.
 
+A plan **file** is a full-weight artifact. For light-weight work the same ceremony
+runs in chat — see "Chat plans" at the end — and this skill's shaping and
+acceptance-check rules apply unchanged.
+
 Require preferences, a slug, and an Approved design from the `checksum` router.
 If the design is missing or stale, return to the router. Honor every directive in
 the `## plan` preferences section.
@@ -67,3 +71,16 @@ Check the plan against the design with fresh eyes and fix inline:
 
 Set `**Status:** Draft`, show the user the path, ask for review, and **stop**.
 On an explicit yes, set `**Status:** Approved` and report back to the router.
+
+Never commit the plan or design files — artifacts stay out of changesets unless the
+user explicitly asks (router `references/lifecycle.md`).
+
+## Chat plans (light weight)
+
+When the router classified the task as light, produce the plan in chat instead of a
+file: the task list with files, interfaces where they matter, acceptance checks
+(same derivation rules — expected values from the design/root cause, written before
+implementation), and the completion condition. Keep it proportionate — a two-task
+fix needs two tasks, not template headings. One explicit yes approves it; execution
+tracks the tasks in the host's task tracker. If drafting the chat plan reveals more
+scope than light warrants, say so and upgrade to full with artifacts.

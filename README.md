@@ -20,8 +20,13 @@ entire framework is markdown. Built to start small and grow with your preference
   regressions.
 - **Evidence over claims.** No phase completes on "should work". Fresh command
   output, complete and read, or the claim isn't made.
-- **Approval gates never scale down.** Ceremony shrinks with task size; your yes
-  before implementation, and your local review before any commit/push/PR, do not.
+- **The artifact scales, the ceremony doesn't.** Every change gets design thinking,
+  a plan with acceptance checks, your approval, and verified evidence — but only
+  full-weight changes get artifact files. Light work (most bug fixes) runs the
+  whole ceremony in chat. And whatever the weight: your yes before implementation,
+  and your local review before any commit/push/PR, never scale away.
+- **Artifacts are working papers.** Design and plan docs are never committed unless
+  you explicitly ask — they stay out of every changeset.
 - **Host-adaptive.** On Claude Code, execution dispatches a fresh subagent per task
   with the primary agent verifying every result. On Codex, execution runs inline
   and plugs the plan's completion condition into `/goal` for long autonomous runs.
@@ -58,12 +63,15 @@ Invoke the router and describe the change:
 The router classifies the task (spike / light / full), routes through the phases,
 and stops at every gate:
 
-| Phase | Output | Gate |
+| Phase | Output (full weight) | Gate |
 |---|---|---|
 | design | `docs/checksum/YYYY-MM-DD-<slug>/design.md` | you approve the design |
 | plan | `.../plan.md` — tasks with spec-derived acceptance checks | you approve the plan |
 | execute | implementation, task by task, evidence per task | agent stops on blockers |
 | finish | fresh verification + adversarial review + review package | **you review locally before any git action** |
+
+Light-weight tasks run the same phases and gates with design and plan presented in
+chat instead of files. Artifact files are never committed unless you ask.
 
 Resume any time with "resume checksum" — phase selection is driven by the artifacts
 and their status lines, not session memory.

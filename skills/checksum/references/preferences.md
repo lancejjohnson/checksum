@@ -70,8 +70,9 @@ contradict a project-level one.
   test and inspect test honesty line by line.
 - Free-form: changelog rules, PR description format, cleanup expectations.
 
-Note: adversarial review and the user's local review gate before any git action are
-built into the finish phase and are not preference-removable.
+Note: three rules are built in and not preference-removable: adversarial review,
+the user's local review gate before any git action, and the exclusion of checksum
+artifacts from every changeset (committed only on explicit request).
 
 ## Starter file
 

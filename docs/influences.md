@@ -25,6 +25,12 @@ changes can argue against the original reasoning instead of rediscovering it.
 - The fixed, non-configurable methodology — checksum is preference-driven.
 - Session-start hook injection and rationalization-table tone; checksum relies on
   skill descriptions and explicit invocation, and keeps failure-mode tables short.
+- Committing specs and plans to the repository as a matter of course — checksum
+  artifacts are working papers, excluded from every changeset unless the user
+  explicitly asks.
+- A written plan document for every planned change — checksum keeps the planning
+  ceremony (tasks, acceptance checks, approval) at every weight, but the plan
+  *file* is a full-weight artifact; light work (most bug fixes) plans in chat.
 
 ## From [leoxlin/smolpowers](https://github.com/leoxlin/smolpowers)
 
@@ -43,6 +49,8 @@ changes can argue against the original reasoning instead of rediscovering it.
   runtime dependency.
 - ASD-STE100 controlled language for artifacts — clarity rules kept, the formal
   standard dropped.
+- Artifact files for every activated change — checksum scales the artifact with
+  task weight, not the ceremony.
 
 ## From [testdouble/han](https://github.com/testdouble/han)
 

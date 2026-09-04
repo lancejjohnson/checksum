@@ -15,6 +15,25 @@ The date is the day the design started; it never changes across phases. Keeping
 design and plan together means the plan can cite the design by relative link and
 reviewers see the whole story in one place.
 
+Artifact files exist only for **full-weight** changes. Light work carries the same
+ceremony in chat: the approved chat plan takes the plan file's place, and task
+tracking takes the checkboxes' place.
+
+## Artifacts stay out of changesets
+
+Checksum artifacts are the agent's working papers. **Never stage or commit anything
+under the artifacts directory unless the user explicitly asks in this session** —
+no preference enables it silently.
+
+- When creating the first artifact in a repository, offer once to add the
+  artifacts directory to `.gitignore`. If declined, keep the exclusion by staging
+  discipline instead: stage by explicit pathspec and never `git add -A` from a
+  directory that would sweep artifacts in.
+- At finish, artifact files are not part of the change: exclude them from the diff
+  presented for review (note their existence instead) and from any commit.
+- "Commit the plan too" from the user is an ordinary explicit request — honor it
+  for that changeset only.
+
 ## Status semantics
 
 | Status | Meaning | Who sets it |
