@@ -47,7 +47,9 @@ Expect: <specific output, count, or exit status>
 
 **Steps:**
 
-- [ ] [Concrete step with real content — code blocks for code, commands for commands]
+- [ ] [Concrete step stated by outcome and constraint — code blocks only where the
+      exact content is the contract (test assertions, schemas, signatures);
+      implementation bodies are written during execution, not here]
 - [ ] […]
 - [ ] Run the acceptance checks above and the neighboring tests they affect;
       record actual output.

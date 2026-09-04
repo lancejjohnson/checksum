@@ -51,9 +51,18 @@ Write `<artifacts dir>/YYYY-MM-DD-<slug>/plan.md` using the template at
 [references/plan-template.md](references/plan-template.md) (or the preferences
 `template:` override). Rules that make plans executable:
 
-- **No placeholders.** "TBD", "add error handling", "similar to Task 2", or a step
-  that says what without showing how are plan failures. Show real code, real
-  commands, real expected output.
+- **Contract-heavy, not code-heavy.** The plan pins down everything two tasks (or
+  the finish phase) must agree on: exact names, signatures, types, file
+  responsibilities, failure behavior, check commands with expected output. It does
+  **not** write implementation bodies — that duplicates the code once as unverified
+  pseudo-implementation and once for real, and the plan copy goes stale on first
+  contact with reality. Use code blocks only where the exact content *is* the
+  contract: a test's assertions, a schema, a config fragment, a public signature.
+  Describe everything else by outcome and constraint, and let execution write it
+  with compiler and test feedback.
+- **No placeholders.** "TBD", "add error handling", "similar to Task 2", or an
+  acceptance check without a command and expected result are plan failures.
+  Contract-heavy is not vague — every name an implementer needs is written down.
 - **Global constraints copied verbatim** from the design — every task implicitly
   includes them.
 - **A Completion Condition section** (see template): the machine-checkable statement

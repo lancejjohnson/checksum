@@ -32,6 +32,12 @@ changes can argue against the original reasoning instead of rediscovering it.
 - The fixed, non-configurable methodology — checksum is preference-driven.
 - Session-start hook injection and rationalization-table tone; checksum relies on
   skill descriptions and explicit invocation, and keeps failure-mode tables short.
+- Code-heavy plan bodies (full implementation code inside plan tasks) — that writes
+  the implementation twice, once as unverified pseudo-code that goes stale on
+  contact with reality. Checksum plans are contract-heavy instead: exact names,
+  signatures, interfaces, and acceptance checks; code blocks only where the content
+  *is* the contract (test assertions, schemas). Implementation bodies get written
+  once, during execution, with compiler and test feedback.
 - Committing specs and plans to the repository as a matter of course — checksum
   artifacts are working papers, excluded from every changeset unless the user
   explicitly asks.
