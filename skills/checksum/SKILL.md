@@ -55,8 +55,11 @@ Say the classification out loud so the user can override it:
   ceremony (design thinking, acceptance checks, approval, verification) is
   identical.
 
-When in doubt, take the heavier path. Complexity discovered mid-task upgrades the
-path — stop, say so, and step up. Nothing downgrades mid-task.
+When in doubt, don't assume — present the choice with a one-line cost/benefit and
+your recommendation, and let the user pick the weight. When complexity grows
+mid-task, stop, describe what changed, and ask whether to upgrade; never silently
+continue at the old weight, and never change weight in either direction without the
+user's call.
 
 ## Step 3: Select the phase (full weight)
 

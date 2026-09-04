@@ -23,7 +23,9 @@ changes can argue against the original reasoning instead of rediscovering it.
   (`fork_turns: "none"` for clean-context spawns, `followup_task` for fix rounds,
   no short-polling `wait_agent`) come from superpowers' `codex-tools` reference.
 - Task classification (spike / bounded / architectural → checksum's
-  spike / light / full) with a one-way upgrade ratchet.
+  spike / light / full). Superpowers' "when in doubt, take the heavier path"
+  ratchet is replaced with asking: the user owns the weight decision, at
+  classification time and when scope grows mid-task.
 
 **Rejected:**
 - Strict TDD as an iron law ("delete the code and start over") — see research below.
