@@ -78,7 +78,12 @@ no preference enables it silently.
 | Draft | Written, not yet approved by the user | design/plan phase |
 | Approved | User said yes to this exact content (including task delivery flags) | design/plan phase, only after an explicit yes |
 | Active | Execution has started against this plan | execute phase, before the first edit |
-| Complete | All tasks done and verified fresh at finish | finish phase, only after verification passes |
+| Complete | All tasks done and verified fresh at plan finalize | finish phase, only after verification passes |
+
+Complete is the end of the artifacts' life: plan finalize distills the design and
+plan into the shipped record (PR description or commit body) and then clears the
+artifact directory (`artifacts: clear`, the default) — decisions live on with the
+code; working papers don't outlive it.
 
 Never mark Approved on the user's behalf. "Looks good, but change X" is not
 approval — make the change, then ask again.
@@ -105,4 +110,6 @@ router skill. Statuses and checkboxes are claims; fresh command output is eviden
 ## Interrupted or abandoned work
 
 If the user abandons a change, leave artifacts as they stand (Draft/Active is an
-honest record). Never delete artifact directories without being asked.
+honest record). Outside plan finalize's close-out (which clears them only after the
+condensed record has shipped durably), never delete artifact directories without
+being asked.

@@ -26,7 +26,9 @@ entire framework is markdown. Built to start small and grow with your preference
   whole ceremony in chat. And whatever the weight: your yes before implementation,
   and your local review before any commit/push/PR, never scale away.
 - **Artifacts are working papers.** Design and plan docs are never committed unless
-  you explicitly ask — they stay out of every changeset.
+  you explicitly ask — they stay out of every changeset. When the change ships, the
+  plan is distilled into the PR description (or commit body) as the permanent
+  record of the decisions, and the working papers are cleared.
 - **Host-adaptive.** On Claude Code, execution dispatches a fresh subagent per task
   with the primary agent verifying every result. On Codex, execution runs inline
   and plugs the plan's completion condition into `/goal` for long autonomous runs.
@@ -75,7 +77,13 @@ and stops at every gate:
 | design | `docs/checksum/YYYY-MM-DD-<slug>/design.md` | you approve the design |
 | plan | `.../plan.md` — tasks with spec-derived acceptance checks | you approve the plan |
 | execute | implementation task by task, evidence per task, adversarial review per delivery unit | agent stops on blockers |
-| finish | fresh verification + review-record check + review package | **you review locally before any git action** |
+| finish | loud completeness scan + fresh verification + condensed record + cleanup | **you review locally before any push/PR** |
+
+Finish runs at two scopes: **task finalize** ships a delivery-flagged task (stacked
+commit/PR, then its worktree is cleaned) and **plan finalize** verifies the
+integrated whole, ships the condensed plan record, and clears the working papers.
+Anything incomplete is reported loudly — every gap with its exact resume action —
+and finalize refuses to proceed past it.
 
 Light-weight tasks run the same phases and gates with design and plan presented in
 chat instead of files. Artifact files are never committed unless you ask.

@@ -32,6 +32,10 @@ changes can argue against the original reasoning instead of rediscovering it.
 - The fixed, non-configurable methodology — checksum is preference-driven.
 - Session-start hook injection and rationalization-table tone; checksum relies on
   skill descriptions and explicit invocation, and keeps failure-mode tables short.
+- Keeping worktrees until a PR lands — in stacked flows checksum removes a
+  delivered task's worktree at task finalize; the branch and PR carry the work,
+  and feedback checks the branch out fresh. (The never-force-remove rule for
+  worktrees with uncommitted files is kept.)
 - Code-heavy plan bodies (full implementation code inside plan tasks) — that writes
   the implementation twice, once as unverified pseudo-code that goes stale on
   contact with reality. Checksum plans are contract-heavy instead: exact names,
@@ -40,7 +44,13 @@ changes can argue against the original reasoning instead of rediscovering it.
   once, during execution, with compiler and test feedback.
 - Committing specs and plans to the repository as a matter of course — checksum
   artifacts are working papers, excluded from every changeset unless the user
-  explicitly asks.
+  explicitly asks. At plan finalize they are distilled into a condensed record
+  that ships as the PR description (or commit body) and the artifact directory is
+  cleared: the decisions stay referable with the code forever; the papers don't
+  outlive it.
+- Quiet, prose-y incompleteness handling — checksum's finalize (task- and
+  plan-scoped) opens with a loud completeness scan that leads with every gap and
+  its exact resume action, and refuses to proceed past any of them.
 - A written plan document for every planned change — checksum keeps the planning
   ceremony (tasks, acceptance checks, approval) at every weight, but the plan
   *file* is a full-weight artifact; light work (most bug fixes) plans in chat.

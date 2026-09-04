@@ -77,6 +77,13 @@ contradict a project-level one.
   Default: ask.
 - `pr: <instruction or never>` — e.g. `open a PR with the repo template`.
   Default: ask.
+- `worktrees: clean | keep` — default `clean`: task finalize removes a delivered
+  task's checksum-created worktree (the branch and PR carry the work); plan
+  finalize removes the rest. Worktrees with uncommitted files are never
+  force-removed.
+- `artifacts: clear | keep` — default `clear`: plan finalize deletes the artifact
+  directory once the condensed plan record has shipped as the PR description or
+  commit body. `keep` retains artifacts with Status Complete.
 - Free-form: changelog rules, PR description format, cleanup expectations.
 
 Note: three rules are built in and not preference-removable: adversarial review,

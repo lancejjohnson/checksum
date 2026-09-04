@@ -68,10 +68,12 @@ A task is claimable when its `status` is `pending` and every task in `depends` i
    fill its Result section with actual output, and set `status: done`.
 7. **Per-task delivery:** a task flagged `deliver: commit` or `deliver: pr` is its
    own delivery unit — run a task-scoped adversarial review first (see below),
-   incorporate the findings, then: for `commit`, make the task-scoped commit (the
-   approved plan authorized it; never include artifact files); for `pr`, hand to
-   `checksum-finish` for the scoped stacked delivery — push and PR still get the
-   user's go.
+   incorporate the findings, then hand to `checksum-finish` for **task finalize**:
+   loud completeness scan, fresh scoped verification, delivery (commits authorized
+   by plan approval; pushes/PRs always get the user's go), and worktree cleanup.
+   In stacked flows, work each `pr` task on its own branch cut from the previous
+   task's branch — in its own worktree when agents run in parallel — so the PRs
+   stack cleanly.
 
 A task you cannot move past gets `status: blocked` with the reason written into its
 Result section — that is visible progress for other agents, not failure.
