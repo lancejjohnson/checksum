@@ -1,9 +1,23 @@
 # Subagent-Per-Task Execution
 
-Used on hosts with a subagent dispatch tool (Claude Code and equivalents) when
-`delegation` is `auto` or `subagent-per-task`. The value: each task gets a fresh
-context with no accumulated drift, and the primary agent stays cheap enough to act
-as a real reviewer between tasks.
+Used when a native dispatch tool is in your tool list and `delegation` is `auto` or
+`subagent-per-task`. The value: each task gets a fresh context with no accumulated
+drift, and the primary agent stays cheap enough to act as a real reviewer between
+tasks.
+
+## Per-host dispatch mechanics
+
+Trust your actual tool list over this table when they disagree.
+
+- **Claude Code (Task tool):** dispatch each task as a Task with the prompt below.
+- **Codex (`spawn_agent`, requires `features.multi_agent = true`):**
+  - Spawn with `fork_turns: "none"` — the default copies your entire transcript
+    into the child, defeating the fresh-context purpose and paying for it.
+  - For fix rounds, message the existing child with `followup_task` instead of
+    spawning a fresh implementer.
+  - Don't short-poll `wait_agent`: while you have local work (verifying the
+    previous task), don't wait at all; when idle, wait in long bounded stretches.
+  - Set `model` and `reasoning_effort` explicitly on every spawn.
 
 ## Dispatch prompt
 

@@ -20,20 +20,22 @@ entry per unchecked task if the host has task tracking.
 
 ## Choose the delegation mode
 
-With `delegation: auto` (the default), follow the host's strength — detect by
-capability, not brand:
+With `delegation: auto` (the default), the deciding question is whether a native
+subagent dispatch tool is **in your current tool list** — not which brand of host
+you are on. Claude Code ships one always (Task); Codex has one only when the user
+enabled `features.multi_agent` (`spawn_agent` et al.); enabling it is the user
+opting into multi-agent execution, so honor it.
 
-- **Subagent dispatch available** (Claude Code's Task tool and equivalents) →
-  **subagent-per-task**. Each task runs in a fresh context; the plan was written for
-  a zero-context implementer, so hand it over whole. Follow
-  [references/delegation.md](references/delegation.md) for the dispatch prompt and
-  the non-negotiable rule: the primary agent verifies every result itself — read
-  the diff, rerun the acceptance checks. A subagent's "done" is a claim, not
-  evidence.
-- **No subagent dispatch** (Codex CLI and most others) → **inline execution**,
-  tasks in sequence. This is where the host's goals feature shines: per the `goals`
-  preference, offer to set `/goal` using the plan's Completion Condition so the run
-  continues autonomously across turns. Phrasing rules:
+- **Dispatch tool present** → **subagent-per-task**. Each task runs in a fresh
+  context; the plan was written for a zero-context implementer, so hand it over
+  whole. Follow [references/delegation.md](references/delegation.md) for the
+  dispatch prompt, per-host dispatch mechanics, and the non-negotiable rule: the
+  primary agent verifies every result itself — read the diff, rerun the acceptance
+  checks. A subagent's "done" is a claim, not evidence.
+- **No dispatch tool** (Codex default config, most other hosts) → **inline
+  execution**, tasks in sequence. This is where the host's goals feature shines:
+  per the `goals` preference, offer to set `/goal` using the plan's Completion
+  Condition so the run continues autonomously across turns. Phrasing rules:
   [references/goals.md](references/goals.md).
 
 An explicit `delegation:` preference overrides the auto choice on either host.
