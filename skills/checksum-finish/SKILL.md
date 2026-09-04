@@ -39,19 +39,26 @@ execute. Do not proceed to review with red checks.
 
 ## Gate 2: Adversarial review
 
-The implementation is reviewed against the design and plan by fresh eyes, using the
-checklist and prompt in
-[references/adversarial-review.md](references/adversarial-review.md):
+The implementation is reviewed against the design and plan by eyes that didn't
+write it — preferably a **different model**: a model reviewing its own output
+inherits its own blind spots and favors its own generations. Follow the reviewer
+selection ladder in
+[references/adversarial-review.md](references/adversarial-review.md) (per the
+`reviewer` preference, default `auto`):
 
-- **Subagent-capable host:** dispatch a clean-context reviewer with only the
-  design, the plan, and the full diff (including untracked files). It has no stake
-  in the code and no memory of writing it.
-- **Inline host:** run the same checklist yourself as a distinct pass — re-read the
-  diff cold, arguing against the implementation, after re-reading design and plan.
+1. **Cross-model** — dispatch the review to the other host's CLI (`codex exec`
+   from Claude Code, `claude -p` from Codex), read-only, with the design, plan,
+   and full diff — on a top-tier model at the highest reasoning effort available
+   (`reviewer-model` preference pins the names).
+2. **Clean-context subagent** — no conversation memory, no stake in the code.
+3. **Structured self-pass** — the checklist run cold; label it as the weakest rung.
 
-Triage findings: fix blockers now (returning to execute for anything substantive),
-rerun the verification the fixes touch, note accepted nits. Deep mode
-(`review-depth: deep`) additionally traces every design edge case to a test.
+**Incorporate the findings before Gate 3**: fix blockers and should-fixes now
+(returning to execute for anything substantive), rerun the verification the fixes
+touch, and carry disagreements forward with evidence rather than dropping them.
+The user reviews the post-review state — findings and resolutions, not a to-do
+list. Deep mode (`review-depth: deep`) additionally traces every design edge case
+to a test.
 
 ## Gate 3: The user's local review — hard stop
 
@@ -59,7 +66,8 @@ Present a review package and **wait**:
 
 1. What changed and why, in a few sentences.
 2. The evidence matrix (criterion → proof → result).
-3. Review findings and how each was resolved or why accepted.
+3. Review findings and what changed in response — each finding with its
+   resolution, or the evidence-backed reason it was rejected.
 4. `git status` and a diff summary (`git diff --stat`, plus untracked files), with
    an offer to walk through any file. Checksum artifact files are not part of the
    change — note that they exist and are excluded, rather than mixing them into

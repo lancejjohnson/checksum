@@ -105,6 +105,24 @@ a per-task checkpoint, and leave strict red-green as an opt-in preference.
 Design pressure comes from the design phase; honesty comes from verification and
 adversarial review, not from ritual ordering.
 
+## Research shaping the review default
+
+- **Self-preference bias:** LLM evaluators recognize and favor their own
+  generations (Panickssery, Bowman & Feng,
+  ["LLM Evaluators Recognize and Favor Their Own Generations"](https://arxiv.org/abs/2404.13076),
+  2024). A clean-context subagent removes conversation bias but not model bias —
+  executor and reviewer from the same model share blind spots.
+- Checksum therefore defaults adversarial review to **cross-model**: the other
+  host's CLI (`codex exec` from Claude Code, `claude -p` from Codex) reviews the
+  work read-only, falling back to clean-context subagent, then a labeled
+  structured self-pass. A reviewer's report is still a claim — blockers get
+  verified against the code, and reviewer approval never substitutes for fresh
+  verification evidence.
+- Reviews run at **review strength**: top-tier models at the highest reasoning
+  effort the CLI exposes (names pinned via the `reviewer-model` preference).
+  Findings are incorporated before the human review gate — the user reviews the
+  post-review state with findings and resolutions, not a to-do list.
+
 ## Goals features
 
 - **Claude Code `/goal`** ([docs](https://code.claude.com/docs/en/goal)): per-turn

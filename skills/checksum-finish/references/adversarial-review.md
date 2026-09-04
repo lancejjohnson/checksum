@@ -4,21 +4,62 @@ The review's stance: **assume the implementation is wrong somewhere and go find 
 Its inputs are the design, the plan, and the full diff (tracked and untracked) —
 not the conversation, and not the implementer's explanations.
 
-## Reviewer dispatch prompt (subagent-capable hosts)
+## Reviewer selection ladder
+
+A model should not evaluate itself: models recognize and favor their own output
+(self-preference bias), and executor and reviewer from the same model share blind
+spots. With `reviewer: auto` (default), take the first rung that works:
+
+1. **Cross-model** — the other host's CLI reviews this host's work: from Claude
+   Code, dispatch the review to `codex exec`; from Codex, to `claude -p`.
+2. **Clean-context subagent** — same model, no conversation memory, no stake in
+   the code. Removes context bias, not model bias; say so in the report.
+3. **Structured self-pass** — the checklist below, run cold after re-reading design
+   and plan. Weakest; label it as such.
+
+An explicit `reviewer:` preference pins a rung. If the pinned rung is unavailable
+(CLI missing or unauthenticated), report that and fall down the ladder rather than
+skipping review.
+
+## Cross-model dispatch
+
+Prepare inputs the reviewer can read without tool permissions drama:
+
+1. Write the full diff — including untracked files — to a temp file
+   (e.g. `git diff` plus `git diff --no-index /dev/null <new-file>` per untracked
+   file, concatenated).
+2. Build the prompt from the template below with filesystem paths to the design,
+   plan, task files, and the diff file.
+3. Dispatch, read-only, **at review strength**: reviews run on a top-tier model at
+   the highest reasoning effort the CLI exposes — a junior reviewer adds little.
+   Use the `reviewer-model` preference values when set; otherwise the strongest
+   tier the CLI offers.
+   - from Claude Code:
+     `codex exec --sandbox read-only -m <model> -c model_reasoning_effort="xhigh" "<prompt>"`
+   - from Codex: `claude -p --model <model> "<prompt>"`, raising the thinking
+     budget if the CLI exposes it (e.g. `MAX_THINKING_TOKENS`); the reviewer only
+     needs to read the referenced files
+4. Triage the findings exactly as with any reviewer. The cross-model reviewer's
+   report is still a claim — verify each blocker against the code before acting
+   on it, and never let a reviewer's *approval* substitute for Gate 1 evidence.
+
+If the other CLI errors or hangs, note it and drop to rung 2.
+
+## Reviewer dispatch prompt (all rungs)
 
 ```
 You are reviewing a completed implementation you did not write. Be adversarial:
 your job is to find what is wrong, missing, or dishonest before a human relies on
-it. Judge only from the documents and diff below; implementer intent doesn't count.
+it. Judge only from the documents and diff; implementer intent doesn't count.
 
 ## Design
-<design.md, verbatim>
+<design.md verbatim, or its path for a cross-model reviewer>
 
 ## Plan
-<plan.md, verbatim, with checkboxes as claimed>
+<plan.md + task files verbatim (statuses as claimed), or their paths>
 
 ## Diff
-<full diff including untracked files>
+<full diff including untracked files, or the diff file's path>
 
 Work the checklist below. Report findings as:
 - BLOCKER: incorrect behavior, unmet design criterion, dishonest test/evidence
@@ -58,6 +99,13 @@ this fail to catch?"
 
 ## Triage
 
-Blockers: fix before the user review gate (substantive fixes return to execute and
-re-verify). Should-fix: present to the user at the review gate with a
-recommendation. Nits: list them; fix only if trivial and in scope.
+Review feedback is incorporated **before** the user review gate — the user reviews
+the post-review state, not a list of known problems:
+
+- **Blockers and should-fixes: fix them now** (substantive fixes return to execute
+  and re-verify; rerun whatever verification the fixes touch). A finding you
+  believe is wrong is not silently dropped — verify against the code and present
+  the disagreement with evidence at the user gate.
+- **Nits:** fix when trivial and in scope; otherwise list them at the gate.
+- The review summary shown at the user gate reports what the reviewer found and
+  what changed in response — findings plus resolutions, not a to-do list.
