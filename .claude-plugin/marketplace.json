@@ -8,7 +8,7 @@
     {
       "name": "checksum",
       "description": "A minimal, evidence-driven development workflow: design, plan, execute, finish.",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "source": "./"
     }
   ]

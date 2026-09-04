@@ -66,10 +66,12 @@ A task is claimable when its `status` is `pending` and every task in `depends` i
    pressure.
 6. Only after you watched its checks pass in this session: check its checkboxes,
    fill its Result section with actual output, and set `status: done`.
-7. **Per-task delivery:** if the task's `deliver` is `commit`, make the task-scoped
-   commit now (the approved plan authorized it; never include artifact files). If
-   `pr`, hand to `checksum-finish` for a scoped stacked delivery — push and PR
-   still get the user's go.
+7. **Per-task delivery:** a task flagged `deliver: commit` or `deliver: pr` is its
+   own delivery unit — run a task-scoped adversarial review first (see below),
+   incorporate the findings, then: for `commit`, make the task-scoped commit (the
+   approved plan authorized it; never include artifact files); for `pr`, hand to
+   `checksum-finish` for the scoped stacked delivery — push and PR still get the
+   user's go.
 
 A task you cannot move past gets `status: blocked` with the reason written into its
 Result section — that is visible progress for other agents, not failure.
@@ -84,6 +86,20 @@ back through the router.
 Three failed fix attempts on the same problem means the plan or design has a gap:
 stop, summarize the evidence, and return to the router rather than thrashing.
 
+## Review before handoff
+
+Adversarial review is execute's exit step, run once per **delivery unit** — each
+`commit`/`pr`-flagged task before it delivers, and the whole change (integration
+included) after all tasks are `done`. With granular delivery this means multiple
+reviews across branches, agents, or PRs; that is by design.
+
+Follow [references/adversarial-review.md](references/adversarial-review.md): the
+reviewer ladder (cross-model first, at review strength), the checklist, and the
+triage rule — blockers and should-fixes get fixed and re-verified now, and the
+findings-plus-resolutions record is written into the task's Result section (task
+reviews) or a `## Review` section in `plan.md` (the change-wide review). Finish
+will refuse delivery without that record.
+
 ## Stop and ask
 
 Pause for the user when you hit: a missing dependency or credential, an instruction
@@ -93,7 +109,8 @@ reportable; guessing is not.
 
 ## Transition
 
-When every task is `done` with observed passing checks, report the plan path and
-per-task results to the router — it will route to `checksum-finish`. Beyond
+When every task is `done` with observed passing checks and the change-wide review
+is incorporated and recorded, report the plan path, per-task results, and the
+review record to the router — it will route to `checksum-finish`. Beyond
 `deliver: commit` tasks in the approved plan, execute never commits — and never
 pushes or publishes; delivery belongs to finish, behind the user's review gate.

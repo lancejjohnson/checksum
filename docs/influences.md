@@ -122,6 +122,10 @@ adversarial review, not from ritual ordering.
   effort the CLI exposes (names pinned via the `reviewer-model` preference).
   Findings are incorporated before the human review gate — the user reviews the
   post-review state with findings and resolutions, not a to-do list.
+- Review is **execute's exit step, per delivery unit** — each `commit`/`pr` task
+  before it ships, plus a change-wide pass at the end — rather than a finish-phase
+  step. Granular delivery means multiple reviews per plan; accepted cost. Finish
+  verifies the review record exists instead of running reviews.
 
 ## Goals features
 

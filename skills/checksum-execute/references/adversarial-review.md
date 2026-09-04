@@ -4,6 +4,12 @@ The review's stance: **assume the implementation is wrong somewhere and go find 
 Its inputs are the design, the plan, and the full diff (tracked and untracked) —
 not the conversation, and not the implementer's explanations.
 
+**When:** at the end of execution, once per delivery unit — a task-scoped review
+before each `deliver: commit`/`pr` task ships (its diff only), and a change-wide
+review after all tasks are done (integration included; task diffs already reviewed
+get re-examined only where later work touched them). Finish does not run reviews;
+it checks the record exists.
+
 ## Reviewer selection ladder
 
 A model should not evaluate itself: models recognize and favor their own output
@@ -107,5 +113,7 @@ the post-review state, not a list of known problems:
   believe is wrong is not silently dropped — verify against the code and present
   the disagreement with evidence at the user gate.
 - **Nits:** fix when trivial and in scope; otherwise list them at the gate.
-- The review summary shown at the user gate reports what the reviewer found and
-  what changed in response — findings plus resolutions, not a to-do list.
+- The review summary is recorded where finish can find it — the task's Result
+  section for task-scoped reviews, a `## Review` section in `plan.md` for the
+  change-wide one — reporting reviewer rung and model, findings, and what changed
+  in response: findings plus resolutions, not a to-do list.

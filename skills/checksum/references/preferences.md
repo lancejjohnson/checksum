@@ -55,6 +55,18 @@ contradict a project-level one.
   the host's best practice: fresh subagent per task where a dispatch tool exists
   (Claude Code), direct inline execution elsewhere (Codex). Set explicitly to
   override on either host.
+- `reviewer: auto | cross-model | subagent | self` — default `auto`: best available
+  rung of the ladder (cross-model → clean-context subagent → structured self-pass).
+  Adversarial review runs at the end of execution, once per delivery unit.
+  Cross-model dispatches the review to the other host's CLI (`codex exec` /
+  `claude -p`) so no model evaluates its own work; it needs that CLI installed and
+  authenticated, and spends its tokens.
+- `reviewer-model: codex=<name>, claude=<name>` — model each CLI should review
+  with. Default: the strongest tier the CLI offers. Reviews always run at the
+  highest reasoning effort the CLI exposes; pin exact names here as tiers evolve.
+- `review-depth: standard | deep` — default `standard`; `deep` additionally asks
+  the reviewer to trace every design edge case to a test and inspect test honesty
+  line by line.
 - Free-form: linting/formatting expectations, commit cadence, logging rules.
 
 ### `## finish`
@@ -65,17 +77,6 @@ contradict a project-level one.
   Default: ask.
 - `pr: <instruction or never>` — e.g. `open a PR with the repo template`.
   Default: ask.
-- `reviewer: auto | cross-model | subagent | self` — default `auto`: best available
-  rung of the ladder (cross-model → clean-context subagent → structured self-pass).
-  Cross-model dispatches the review to the other host's CLI (`codex exec` /
-  `claude -p`) so no model evaluates its own work; it needs that CLI installed and
-  authenticated, and spends its tokens.
-- `reviewer-model: codex=<name>, claude=<name>` — model each CLI should review
-  with. Default: the strongest tier the CLI offers. Reviews always run at the
-  highest reasoning effort the CLI exposes; pin exact names here as tiers evolve.
-- `review-depth: standard | deep` — default `standard`. Adversarial review always
-  runs; `deep` additionally asks the reviewer to trace every design edge case to a
-  test and inspect test honesty line by line.
 - Free-form: changelog rules, PR description format, cleanup expectations.
 
 Note: three rules are built in and not preference-removable: adversarial review,
@@ -96,11 +97,11 @@ execute.goals: offer
 - activation: suggest
 
 ## execute
+- reviewer: cross-model
+- reviewer-model: codex=<top-tier codex model>, claude=<top-tier claude model>
 - Run the formatter before declaring any task complete.
 
 ## finish
-- reviewer: cross-model
-- reviewer-model: codex=<top-tier codex model>, claude=<top-tier claude model>
 - commit: make one conventional commit per completed plan
 - push: ask first
 ```

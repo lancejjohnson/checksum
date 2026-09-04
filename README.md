@@ -74,8 +74,8 @@ and stops at every gate:
 |---|---|---|
 | design | `docs/checksum/YYYY-MM-DD-<slug>/design.md` | you approve the design |
 | plan | `.../plan.md` — tasks with spec-derived acceptance checks | you approve the plan |
-| execute | implementation, task by task, evidence per task | agent stops on blockers |
-| finish | fresh verification + adversarial review + review package | **you review locally before any git action** |
+| execute | implementation task by task, evidence per task, adversarial review per delivery unit | agent stops on blockers |
+| finish | fresh verification + review-record check + review package | **you review locally before any git action** |
 
 Light-weight tasks run the same phases and gates with design and plan presented in
 chat instead of files. Artifact files are never committed unless you ask.

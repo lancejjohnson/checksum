@@ -5,9 +5,11 @@ description: Verify, adversarially review, and deliver a completed checksum plan
 
 # Checksum: Finish
 
-Finish is three gates in strict order: **fresh verification → adversarial review →
+Finish is three gates in strict order: **fresh verification → review completeness →
 the user's local review**. Only after all three does any git action happen. None of
-the gates is skippable, whatever the task size.
+the gates is skippable, whatever the task size. (Adversarial review itself runs at
+the end of execute, per delivery unit — finish confirms it happened; it does not
+run it.)
 
 Require preferences and a completed plan from the `checksum` router — an Active
 plan whose task files are all `done`, or for light work the approved chat plan with
@@ -17,9 +19,9 @@ return to the router. Honor every directive in the `## finish` preferences secti
 
 **Scoped delivery mode:** execute hands single tasks here when their `deliver: pr`
 flag fires (stacked PRs). Run the same gates scoped to that task — its acceptance
-checks fresh, review of its diff, the user's go — then push the stacked branch and
-open the PR against the previous task's branch (or the base for the first).
-The full-plan finish below still runs once everything is done.
+checks fresh, its task-scoped review record present, the user's go — then push the
+stacked branch and open the PR against the previous task's branch (or the base for
+the first). The full-plan finish below still runs once everything is done.
 
 ## Gate 1: Fresh verification
 
@@ -37,28 +39,21 @@ Evidence rules: [references/verification.md](references/verification.md).
 Any required check fails → keep the plan Active, report the failure, and return to
 execute. Do not proceed to review with red checks.
 
-## Gate 2: Adversarial review
+## Gate 2: Review completeness
 
-The implementation is reviewed against the design and plan by eyes that didn't
-write it — preferably a **different model**: a model reviewing its own output
-inherits its own blind spots and favors its own generations. Follow the reviewer
-selection ladder in
-[references/adversarial-review.md](references/adversarial-review.md) (per the
-`reviewer` preference, default `auto`):
+Adversarial review is execute's exit step (the `checksum-execute` skill's
+`references/adversarial-review.md`: cross-model first, at review strength, findings
+incorporated). Finish confirms the record:
 
-1. **Cross-model** — dispatch the review to the other host's CLI (`codex exec`
-   from Claude Code, `claude -p` from Codex), read-only, with the design, plan,
-   and full diff — on a top-tier model at the highest reasoning effort available
-   (`reviewer-model` preference pins the names).
-2. **Clean-context subagent** — no conversation memory, no stake in the code.
-3. **Structured self-pass** — the checklist run cold; label it as the weakest rung.
+1. The change-wide review record exists (`## Review` in `plan.md`; task Result
+   sections for delivery-unit reviews) and names the reviewer rung and model.
+2. Every blocker and should-fix shows a resolution — or an evidence-backed
+   rejection to surface at Gate 3.
+3. The record is not stale: no code changed after the review it covers, other than
+   the reviewed fixes themselves.
 
-**Incorporate the findings before Gate 3**: fix blockers and should-fixes now
-(returning to execute for anything substantive), rerun the verification the fixes
-touch, and carry disagreements forward with evidence rather than dropping them.
-The user reviews the post-review state — findings and resolutions, not a to-do
-list. Deep mode (`review-depth: deep`) additionally traces every design edge case
-to a test.
+Missing, incomplete, or stale → return to execute for the review; do not run a
+substitute review here.
 
 ## Gate 3: The user's local review — hard stop
 
