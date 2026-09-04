@@ -1,0 +1,94 @@
+# Influences and Evidence
+
+Checksum synthesizes three open frameworks and current research. This file records
+what was adopted, what was rejected, and why — so future preference and skill
+changes can argue against the original reasoning instead of rediscovering it.
+
+## From [obra/superpowers](https://github.com/obra/superpowers)
+
+**Adopted:**
+- Hard approval gates that never scale down with task size (brainstorming's
+  "the ceremony scales; the approval gate never does").
+- Plans written for a zero-context implementer: exact files, signatures, commands,
+  expected output; "no placeholders" as a plan failure class.
+- Verification-before-completion: no claims without fresh evidence; the gate
+  function (identify → run → read → then claim).
+- Finish as a menu where integration is the human's decision; discard only on an
+  explicit typed request; never force-push.
+- Subagent-per-task execution with primary-agent verification (Claude-side
+  delegation mode), including "a subagent report is a claim, not evidence".
+- Task classification (spike / bounded / architectural → checksum's
+  spike / light / full) with a one-way upgrade ratchet.
+
+**Rejected:**
+- Strict TDD as an iron law ("delete the code and start over") — see research below.
+- The fixed, non-configurable methodology — checksum is preference-driven.
+- Session-start hook injection and rationalization-table tone; checksum relies on
+  skill descriptions and explicit invocation, and keeps failure-mode tables short.
+
+## From [leoxlin/smolpowers](https://github.com/leoxlin/smolpowers)
+
+**Adopted:**
+- The minimal four-phase shape (design → plan → execute → finish) with a router
+  skill selecting the phase from artifact presence and `Status:` lines — making the
+  workflow resumable from artifacts, not session memory.
+- Configuration layering (user-global then project) and template overrides.
+- Proportionality: config/docs/generated files get the narrowest direct validator,
+  not invented unit tests.
+- Return-to-earlier-phase on stale artifacts rather than improvising forward.
+
+**Rejected:**
+- JSON config + Python loader — replaced with plain markdown preferences (optional
+  YAML frontmatter) so free-form prose rules are first-class and there is no
+  runtime dependency.
+- ASD-STE100 controlled language for artifacts — clarity rules kept, the formal
+  standard dropped.
+
+## From [testdouble/han](https://github.com/testdouble/han)
+
+**Adopted:**
+- Dual-host distribution: one repo, `.claude-plugin/` + `.codex-plugin/` manifests
+  over a shared `skills/` tree, with marketplace files for both hosts.
+- Templates and rules split into `references/` so SKILL.md stays small and the
+  heavy material loads only when needed (progressive disclosure).
+- Evidence rules as standalone documents that multiple skills cite.
+
+**Rejected (for now):**
+- The multi-plugin suite decomposition — checksum ships as one plugin until it
+  earns splitting.
+- Specialist agent rosters — the two dispatch prompts (implementer, adversarial
+  reviewer) live as reference templates instead.
+
+## Research shaping the testing default
+
+- **Böckeler, ["TDD inside the agent loop — theater or actual value?"](https://martinfowler.com/articles/exploring-gen-ai/tdd-in-the-agent-loop.html)
+  (Thoughtworks, 2026):** across batches, in-loop TDD showed no reliable quality
+  gain at ~3-8.5x token cost; non-TDD runs often ranked higher on design because
+  they did full upfront design before any code; agents faked/skipped red steps and
+  wrote tautological tests despite test-first ordering; mutation scores showed no
+  TDD advantage. Hypothesis (Ördög): training data contains finished code, not
+  step-by-step TDD processes.
+- **Mathews & Nagappan, ["Test-Driven Development for Code Generation"](https://arxiv.org/abs/2402.13521)
+  (2024); TDD-Agent (2026); TENET (2025-26):** providing tests/expected behaviors
+  *before* implementation consistently improves correctness at function and
+  repository level. The benefit is tests-as-executable-spec.
+
+**Conclusion embodied in checksum:** move test-first thinking into the plan
+(acceptance checks derived from the design before implementation exists), keep an
+anti-tautology rule and a bug-fix observed-red requirement, schedule refactoring as
+a per-task checkpoint, and leave strict red-green as an opt-in preference.
+Design pressure comes from the design phase; honesty comes from verification and
+adversarial review, not from ritual ordering.
+
+## Goals features
+
+- **Claude Code `/goal`** ([docs](https://code.claude.com/docs/en/goal)): per-turn
+  evaluator model judging the condition from the transcript only.
+- **Codex `/goal`** ([docs](https://developers.openai.com/codex/use-cases/follow-goals)):
+  `features.goals`, pause/resume/clear, suited to multi-hour runs.
+
+Both reward the same plan property: a completion condition stated as exact commands
+with expected output plus scope constraints. Checksum's plan template carries a
+`Completion Condition` section for this; execution surfaces proof output into the
+transcript so evaluators can judge. Git actions and external effects are never part
+of a goal — they stay behind the finish phase's user review gate.

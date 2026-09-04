@@ -1,0 +1,27 @@
+{
+  "name": "checksum",
+  "version": "0.1.0",
+  "description": "A minimal, evidence-driven development workflow: design, plan, execute, finish. Upfront design and fresh verification carry the quality load; testing policy is spec-anchored by default and configurable per project.",
+  "author": {
+    "name": "plukevdh",
+    "url": "https://github.com/plukevdh"
+  },
+  "homepage": "https://github.com/plukevdh/checksum",
+  "repository": "https://github.com/plukevdh/checksum",
+  "license": "MIT",
+  "keywords": ["sdd", "workflow", "design", "planning", "verification", "goals"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Checksum",
+    "shortDescription": "Design, plan, execute, finish - with evidence, not ritual.",
+    "longDescription": "A minimal development workflow for coding agents. Design and plan before code, execute against spec-anchored acceptance checks, and finish only with fresh verification evidence. Configurable per project through a plain-markdown preferences file.",
+    "developerName": "plukevdh",
+    "category": "Developer Tools",
+    "capabilities": ["Interactive", "Read", "Write"],
+    "websiteURL": "https://github.com/plukevdh/checksum",
+    "defaultPrompt": [
+      "Use checksum to design and build a new feature.",
+      "Resume the checksum plan in this repo."
+    ]
+  }
+}

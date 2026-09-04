@@ -1,0 +1,15 @@
+{
+  "name": "checksum",
+  "description": "Marketplace for the checksum workflow plugin.",
+  "owner": {
+    "name": "plukevdh"
+  },
+  "plugins": [
+    {
+      "name": "checksum",
+      "description": "A minimal, evidence-driven development workflow: design, plan, execute, finish.",
+      "version": "0.1.0",
+      "source": "./"
+    }
+  ]
+}
