@@ -33,24 +33,25 @@ entire framework is markdown. Built to start small and grow with your preference
 
 ## Install
 
-### Claude Code
+### From a local clone (both hosts)
+
+```bash
+git clone https://github.com/plukevdh/checksum && cd checksum
+scripts/install-local.sh          # targets every host present; or --claude / --codex
+```
+
+For Claude Code this registers the repo as a local marketplace and installs the
+plugin (`claude plugin marketplace add . && claude plugin install checksum@checksum`).
+For Codex it symlinks `skills/*` into `~/.codex/skills/`, so edits to the clone are
+live immediately (use `--copy` for a frozen copy). `--uninstall` reverses either.
+To use goals during execution, enable them once: `codex features enable goals`.
+
+### Claude Code, from GitHub
 
 ```
 /plugin marketplace add plukevdh/checksum
 /plugin install checksum@checksum
 ```
-
-### Codex
-
-Install from a local clone (or a repo marketplace once published):
-
-```bash
-git clone https://github.com/plukevdh/checksum
-```
-
-Then add it via `/plugins` → install from path, or copy `skills/*` into
-`~/.codex/skills/`. To use goals during execution, enable them once:
-`codex features enable goals`.
 
 ## Use
 
