@@ -20,11 +20,21 @@ frontmatter:
 ```yaml
 ---
 status: pending          # pending | claimed | done | blocked
-claimed-by:              # session/agent identifier, set on claim
+claimed-by:              # link/id of the claiming session, set on claim (see below)
 depends: []              # task ids (filename stems) that must be done first
 deliver: plan            # plan | commit | pr
 ---
 ```
+
+`claimed-by` is an audit trail, not just a lock: use the most durable session
+reference the host exposes, so the conversation that did the work stays reachable
+after the fact.
+
+| Host | Value |
+|---|---|
+| Delta | `delta://thread/$DELTA_CURRENT_THREAD_ID` (env var; renders as a thread link) |
+| Claude Code / Codex | the session id if the host exposes one; else `<host> <date>` |
+| Dispatched subagent | the primary session's reference plus ` agent=<child label>` |
 
 | Task status | Meaning | Who sets it |
 |---|---|---|

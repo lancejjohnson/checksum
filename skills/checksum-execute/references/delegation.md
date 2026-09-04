@@ -21,9 +21,11 @@ Trust your actual tool list over this table when they disagree.
 
 ## Dispatch prompt
 
-Claim the task file first (`status: claimed`, `claimed-by` naming the child) — the
-primary agent owns all frontmatter writes; subagents implement, they don't
-bookkeep. Then give the subagent everything — it has no conversation memory:
+Claim the task file first (`status: claimed`, `claimed-by` set to the primary
+session's durable reference — e.g. `delta://thread/$DELTA_CURRENT_THREAD_ID` on
+Delta — plus ` agent=<child label>`; format table in the router's
+`references/lifecycle.md`) — the primary agent owns all frontmatter writes;
+subagents implement, they don't bookkeep. Then give the subagent everything — it has no conversation memory:
 
 ```
 You are implementing one task from an approved plan. Do exactly this task; nothing

@@ -1,6 +1,6 @@
 ---
 status: pending
-claimed-by:
+claimed-by: # on claim: durable session link, e.g. delta://thread/$DELTA_CURRENT_THREAD_ID
 depends: []
 deliver: plan
 ---
