@@ -60,6 +60,17 @@ EOF
   else
     printf '%s\n' "$out" >&2
     echo "claude: FAILED to register marketplace from $ROOT" >&2
+    if printf '%s' "$out" | grep -qi 'enterprise policy'; then
+      cat >&2 <<'EOF'
+claude: an enterprise policy restricts marketplace sources. If the allowlist
+claude: includes a pathPattern (e.g. /claude-plugins-dev$), register through a
+claude: matching path instead:
+claude:   ln -s <this clone> ~/src/claude-plugins-dev
+claude:   claude plugin marketplace add ~/src/claude-plugins-dev
+claude:   claude plugin install checksum@checksum
+claude: or publish the repo to an allowlisted GitHub org.
+EOF
+    fi
     return 1
   fi
   if claude plugin install checksum@checksum; then

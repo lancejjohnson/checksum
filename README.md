@@ -46,6 +46,12 @@ For Codex it symlinks `skills/*` into `~/.codex/skills/`, so edits to the clone 
 live immediately (use `--copy` for a frozen copy). `--uninstall` reverses either.
 To use goals during execution, enable them once: `codex features enable goals`.
 
+> **Enterprise-managed Claude Code:** managed policies can restrict marketplace
+> sources to an allowlist. If registration fails with a policy error, register the
+> clone through an allowed `pathPattern` (e.g. symlink it to a directory named
+> `claude-plugins-dev`) or publish to an allowlisted GitHub org — the script prints
+> the specific hint when it hits this.
+
 ### Claude Code, from GitHub
 
 ```

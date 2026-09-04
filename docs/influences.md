@@ -15,8 +15,13 @@ changes can argue against the original reasoning instead of rediscovering it.
   function (identify → run → read → then claim).
 - Finish as a menu where integration is the human's decision; discard only on an
   explicit typed request; never force-push.
-- Subagent-per-task execution with primary-agent verification (Claude-side
-  delegation mode), including "a subagent report is a claim, not evidence".
+- Subagent-per-task execution with primary-agent verification, including "a
+  subagent report is a claim, not evidence". Checksum keys this on whether a
+  dispatch tool is present in the tool list rather than on host brand: Claude Code
+  always ships one (Task); Codex ships one behind the opt-in
+  `features.multi_agent` flag (`spawn_agent`). The Codex dispatch mechanics
+  (`fork_turns: "none"` for clean-context spawns, `followup_task` for fix rounds,
+  no short-polling `wait_agent`) come from superpowers' `codex-tools` reference.
 - Task classification (spike / bounded / architectural → checksum's
   spike / light / full) with a one-way upgrade ratchet.
 
@@ -100,3 +105,18 @@ with expected output plus scope constraints. Checksum's plan template carries a
 `Completion Condition` section for this; execution surfaces proof output into the
 transcript so evaluators can judge. Git actions and external effects are never part
 of a goal — they stay behind the finish phase's user review gate.
+
+## Distribution learnings (from installing this plugin)
+
+- **Claude Code** installs from marketplaces only; local directories work via
+  `claude plugin marketplace add <path>` — *unless* an enterprise managed policy
+  restricts sources to an allowlist (specific `github:` repos and `pathPattern:`
+  entries such as `/claude-plugins-dev$`). On managed machines, register the clone
+  through an allowed path (symlink or clone named to match the pattern) or publish
+  to an allowlisted GitHub org. The install script surfaces the policy error and
+  hints at this.
+- **Codex** has no non-interactive plugin install; the reliable local mechanism is
+  placing (symlinking) skill directories under `$CODEX_HOME/skills/`, which Codex
+  hot-reloads. Goals require a one-time `codex features enable goals`.
+- Skill names are prefixed (`checksum-*`) because Codex does not reliably namespace
+  skills by plugin the way Claude Code does (`/checksum:...`).
