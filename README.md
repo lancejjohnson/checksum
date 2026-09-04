@@ -61,6 +61,33 @@ To use goals during execution, enable them once: `codex features enable goals`.
 /plugin install checksum@checksum
 ```
 
+### Codex, step by step
+
+Codex discovers skills from `$CODEX_HOME/skills/` (default `~/.codex/skills/`) and
+hot-reloads changes; there is no non-interactive plugin install. Either run the
+script above with `--codex`, or do it manually:
+
+```bash
+git clone https://github.com/plukevdh/checksum ~/src/checksum
+mkdir -p ~/.codex/skills
+for s in ~/src/checksum/skills/*/; do
+  ln -sfn "${s%/}" ~/.codex/skills/"$(basename "$s")"
+done
+```
+
+(Symlinks keep the install live as the clone updates; `cp -R` instead for a frozen
+copy.) Then enable the features checksum takes advantage of:
+
+```bash
+codex features enable goals          # /goal - autonomous runs against the plan's completion condition
+codex features enable multi_agent    # optional: spawn_agent - flips execution to subagent-per-task
+```
+
+Verify inside Codex with `/skills` (all five `checksum*` skills should list) and
+start with `$checksum <what you want to build>`. Cross-model review additionally
+wants the `claude` CLI installed and authenticated so Codex can dispatch reviews to
+it; without it, review falls back to a clean-context subagent.
+
 ## Use
 
 Invoke the router and describe the change:
