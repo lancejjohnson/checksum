@@ -10,10 +10,16 @@ the user's local review**. Only after all three does any git action happen. None
 the gates is skippable, whatever the task size.
 
 Require preferences and a completed plan from the `checksum` router — an Active
-plan file with every task checked, or for light work the approved chat plan with
+plan whose task files are all `done`, or for light work the approved chat plan with
 every tracked task done. If a task or its evidence is incomplete, report it and
 return to the router. Honor every directive in the `## finish` preferences section.
 (For light work, read "the plan" below as the approved chat plan.)
+
+**Scoped delivery mode:** execute hands single tasks here when their `deliver: pr`
+flag fires (stacked PRs). Run the same gates scoped to that task — its acceptance
+checks fresh, review of its diff, the user's go — then push the stacked branch and
+open the PR against the previous task's branch (or the base for the first).
+The full-plan finish below still runs once everything is done.
 
 ## Gate 1: Fresh verification
 

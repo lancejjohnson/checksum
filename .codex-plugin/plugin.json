@@ -1,6 +1,6 @@
 {
   "name": "checksum",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A minimal, evidence-driven development workflow: design, plan, execute, finish. Upfront design and fresh verification carry the quality load; testing policy is spec-anchored by default and configurable per project.",
   "author": {
     "name": "plukevdh",

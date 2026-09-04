@@ -1,8 +1,8 @@
 # [Change Name] Implementation Plan
 
-> **For implementers:** Execute with the `checksum-execute` skill. Work tasks in
-> order unless marked independent. Update a checkbox only after its check passed
-> in this session.
+> **For implementers:** Execute with the `checksum-execute` skill. Tasks live in
+> `tasks/` as separate claimable files; claim before working, respect `depends`,
+> and mark `done` only after observed passing checks.
 
 **Status:** Draft
 **Design:** [./design.md](./design.md)
@@ -22,39 +22,12 @@ constraints. This block is ready to paste into `/goal` on hosts that support goa
 > Example: `npm test` exits 0 with no failures, `npm run lint` reports 0 errors,
 > and no files outside `src/retry/` and `tests/retry/` were modified.
 
----
+## Task Index
 
-### Task N: [Outcome, stated as a result]
-
-**Files:**
-- Create: `exact/path/new_file.py`
-- Modify: `exact/path/existing.py`
-- Test: `tests/exact/path/test_file.py`
-
-**Interfaces:**
-- Consumes: [exact signatures from earlier tasks or existing code]
-- Produces: [exact names, parameters, return types later tasks rely on]
-
-**Failure behavior:** [What this component does on bad input / partial failure,
-from the design's edge-case section.]
-
-**Acceptance checks** (expected values from the design, written before implementation):
-
-```
-Run: <exact command>
-Expect: <specific output, count, or exit status>
-```
-
-**Steps:**
-
-- [ ] [Concrete step stated by outcome and constraint — code blocks only where the
-      exact content is the contract (test assertions, schemas, signatures);
-      implementation bodies are written during execution, not here]
-- [ ] […]
-- [ ] Run the acceptance checks above and the neighboring tests they affect;
-      record actual output.
-
----
+| Task | Outcome | Depends | Deliver |
+|---|---|---|---|
+| [`tasks/01-<slug>.md`](tasks/01-<slug>.md) | [one line] | — | plan |
+| [`tasks/02-<slug>.md`](tasks/02-<slug>.md) | [one line] | 01-<slug> | plan |
 
 ## Full Verification
 

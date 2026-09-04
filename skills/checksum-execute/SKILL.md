@@ -15,8 +15,11 @@ a gap that blocks starting, return to the router — do not improvise around a b
 plan. Honor every directive in the `## execute` preferences section.
 
 Before the first edit: set the plan file `**Status:** Active` (light: the task
-tracker is the status), note any pre-existing uncommitted user changes (never mix
-them into your work), and create a task-tracker entry per unchecked task.
+tracker is the status), and note any pre-existing uncommitted user changes (never
+mix them into your work). Full-weight task state lives in the task files'
+frontmatter (`tasks/NN-*.md`; semantics in the router's `references/lifecycle.md`)
+— mirror it into the host's task tracker for visibility, but the files are the
+source of truth.
 
 ## Choose the delegation mode
 
@@ -43,9 +46,12 @@ Parallel dispatch only for tasks the plan explicitly marks independent.
 
 ## The task loop
 
-For each unchecked task, in plan order:
+A task is claimable when its `status` is `pending` and every task in `depends` is
+`done`. For each claimable task, preferring numeric order:
 
-1. Mark it in progress.
+1. **Claim it**: set `status: claimed` and `claimed-by` in its frontmatter before
+   the first edit. (Claimed by a stale session? Reclaimable — re-verify any partial
+   work first.)
 2. Apply the testing policy from [references/testing.md](references/testing.md)
    using the `testing` preference (default `spec-anchored`): materialize the task's
    acceptance checks as real tests before or alongside the implementation, with
@@ -58,8 +64,15 @@ For each unchecked task, in plan order:
    Tidy naming, duplication, and file placement within the task's scope while
    checks stay green. This scheduled pass replaces red-green ritual as the design
    pressure.
-6. Check the checkbox only after you watched its checks pass in this session, and
-   record actual output where the plan asks for it.
+6. Only after you watched its checks pass in this session: check its checkboxes,
+   fill its Result section with actual output, and set `status: done`.
+7. **Per-task delivery:** if the task's `deliver` is `commit`, make the task-scoped
+   commit now (the approved plan authorized it; never include artifact files). If
+   `pr`, hand to `checksum-finish` for a scoped stacked delivery — push and PR
+   still get the user's go.
+
+A task you cannot move past gets `status: blocked` with the reason written into its
+Result section — that is visible progress for other agents, not failure.
 
 ## When checks fail
 
@@ -80,7 +93,7 @@ reportable; guessing is not.
 
 ## Transition
 
-When every task is checked with observed passing checks, report the plan path and
-per-task results to the router — it will route to `checksum-finish`. Execute never
-commits, pushes, or publishes; delivery belongs to finish, behind the user's review
-gate.
+When every task is `done` with observed passing checks, report the plan path and
+per-task results to the router — it will route to `checksum-finish`. Beyond
+`deliver: commit` tasks in the approved plan, execute never commits — and never
+pushes or publishes; delivery belongs to finish, behind the user's review gate.

@@ -66,16 +66,19 @@ user's call.
 Artifacts live in `docs/checksum/YYYY-MM-DD-<slug>/` (overridable via preferences):
 
 - `design.md` — the design, with `**Status:** Draft | Approved`
-- `plan.md` — the implementation plan, with `**Status:** Draft | Approved | Active | Complete`
+- `plan.md` — the plan overview, with `**Status:** Draft | Approved | Active | Complete`
+- `tasks/NN-<task-slug>.md` — one claimable file per task, tracked in frontmatter
+  (`status: pending | claimed | done | blocked`, `depends`, `deliver`)
 
 Use the slug the user named; otherwise match the change being discussed against
 existing artifact directories. Then select the first phase that applies:
 
 1. **design** — no design exists, or it is incomplete or stale (its goal,
    constraints, or approach no longer describe the requested work).
-2. **plan** — design is Approved but no current plan exists.
-3. **execute** — plan is Approved or Active with unchecked tasks or failing checks.
-4. **finish** — every plan task is checked and verified, status still Active.
+2. **plan** — design is Approved but no current plan (overview + task files) exists.
+3. **execute** — plan is Approved or Active with tasks not yet `done` (pending,
+   claimed, or blocked) or with failing checks.
+4. **finish** — every task file is `done` and verified, plan status still Active.
 
 A plan with `**Status:** Complete` is closed; a new request gets a new slug.
 Details and staleness rules: [references/lifecycle.md](references/lifecycle.md).

@@ -50,7 +50,11 @@ changes can argue against the original reasoning instead of rediscovering it.
 **Adopted:**
 - The minimal four-phase shape (design → plan → execute → finish) with a router
   skill selecting the phase from artifact presence and `Status:` lines — making the
-  workflow resumable from artifacts, not session memory.
+  workflow resumable from artifacts, not session memory. Checksum extends this with
+  per-task files (`tasks/NN-*.md`) whose frontmatter tracks claim state
+  (`pending | claimed | done | blocked`), hard dependencies, and a `deliver` flag
+  (`plan | commit | pr`) — so multiple agents can coordinate through the filesystem
+  and tasks can ship as task-scoped commits or stacked PRs.
 - Configuration layering (user-global then project) and template overrides.
 - Proportionality: config/docs/generated files get the narrowest direct validator,
   not invented unit tests.

@@ -47,9 +47,27 @@ testing quality is won:
 
 ## Write the plan
 
-Write `<artifacts dir>/YYYY-MM-DD-<slug>/plan.md` using the template at
-[references/plan-template.md](references/plan-template.md) (or the preferences
-`template:` override). Rules that make plans executable:
+Write into `<artifacts dir>/YYYY-MM-DD-<slug>/`:
+
+- `plan.md` — the overview — from [references/plan-template.md](references/plan-template.md)
+  (or the preferences `template:` override): status, goal, global constraints,
+  completion condition, and the task index.
+- `tasks/NN-<task-slug>.md` — one file per task — from
+  [references/task-template.md](references/task-template.md). Separate files let
+  agents claim tasks independently and let delivery happen per task.
+
+Task frontmatter carries the coordination state (semantics in the router's
+`references/lifecycle.md`): `status: pending`, `depends` listing only **real**
+ordering constraints — an interface consumed, a file both would edit — so that
+everything else stays parallelizable, and `deliver`:
+
+- `plan` (default) — delivered together at finish.
+- `commit` — task-scoped commit when done; plan approval authorizes these commits.
+- `pr` — stacked branch/PR per task (GitHub stacking); each push still gets a
+  per-delivery user go. Flag `pr` only when tasks are genuinely independently
+  reviewable, and say so when presenting the plan for approval.
+
+Rules that make plans executable:
 
 - **Contract-heavy, not code-heavy.** The plan pins down everything two tasks (or
   the finish phase) must agree on: exact names, signatures, types, file
@@ -77,6 +95,9 @@ Check the plan against the design with fresh eyes and fix inline:
 3. Interface consistency — names and signatures used in later tasks match where
    earlier tasks defined them.
 4. Every check command can actually prove its expected result.
+5. Dependency sanity — no cycles, no `depends` entry naming a missing task, no
+   fabricated dependencies that serialize parallelizable work, and every `pr`-
+   flagged task genuinely reviewable on its own.
 
 Set `**Status:** Draft`, show the user the path, ask for review, and **stop**.
 On an explicit yes, set `**Status:** Approved` and report back to the router.

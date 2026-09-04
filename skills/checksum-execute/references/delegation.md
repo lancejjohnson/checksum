@@ -21,21 +21,24 @@ Trust your actual tool list over this table when they disagree.
 
 ## Dispatch prompt
 
-Give each subagent everything — it has no conversation memory. Include verbatim:
+Claim the task file first (`status: claimed`, `claimed-by` naming the child) — the
+primary agent owns all frontmatter writes; subagents implement, they don't
+bookkeep. Then give the subagent everything — it has no conversation memory:
 
 ```
 You are implementing one task from an approved plan. Do exactly this task; nothing
-more. Do not commit, push, or touch files outside the task's file list.
+more. Do not commit, push, edit the task/plan files, or touch files outside the
+task's file list.
 
 ## Global constraints
-<plan's Global Constraints section, verbatim>
+<plan.md's Global Constraints section, verbatim>
 
 ## Testing policy
 <the selected mode's rules from testing.md, verbatim>
 
 ## Your task
-<the full task section from the plan, verbatim: files, interfaces, failure
-behavior, acceptance checks, steps>
+<the task file body, verbatim: files, interfaces, failure behavior, acceptance
+checks, steps>
 
 ## Report format
 When done, report: files created/modified; each acceptance check command with its
@@ -50,7 +53,7 @@ After each subagent reports:
 2. Rerun the task's acceptance checks yourself; read complete output.
 3. Check conformance: files touched match the task list; interfaces match what the
    plan says later tasks consume; no scope creep, placeholders, or weakened tests.
-4. Only then check the checkbox.
+4. Only then update the task file: checkboxes, Result section, `status: done`.
 
 A subagent report of success is a claim. Verification is yours.
 
@@ -63,5 +66,7 @@ A subagent report of success is a claim. Verification is yours.
 
 ## Parallelism
 
-Dispatch concurrently only tasks the plan explicitly marks independent, and verify
-each result separately before checking any of their boxes.
+Dispatch concurrently any set of claimable tasks (status `pending`, all `depends`
+done) whose file lists don't overlap — claim each before dispatch so the
+frontmatter shows who has what — and verify each result separately before marking
+any of them done.
