@@ -26,10 +26,10 @@ deliver: plan            # plan | commit | pr
 ---
 ```
 
-`claimed-by` is an audit trail, not just a lock: use a **navigable link within the
-client harness** wherever the host supports one, so moving between the task and the
-conversation that did the work stays a click, not a search. Fall back to the most
-durable session identifier the host exposes.
+`claimed-by` is an audit trail, not just a lock: use a **navigable deep link within
+the client harness** wherever the host supports one, so moving between the task and
+the conversation that did the work stays a click, not a search. Fall back to the
+most durable session identifier the host exposes.
 
 | Host | Value |
 |---|---|
