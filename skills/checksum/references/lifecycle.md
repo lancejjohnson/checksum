@@ -26,14 +26,15 @@ deliver: plan            # plan | commit | pr
 ---
 ```
 
-`claimed-by` is an audit trail, not just a lock: use the most durable session
-reference the host exposes, so the conversation that did the work stays reachable
-after the fact.
+`claimed-by` is an audit trail, not just a lock: use a **navigable link within the
+client harness** wherever the host supports one, so moving between the task and the
+conversation that did the work stays a click, not a search. Fall back to the most
+durable session identifier the host exposes.
 
 | Host | Value |
 |---|---|
 | Delta | `delta://thread/$DELTA_CURRENT_THREAD_ID` (env var; renders as a thread link) |
-| Claude Code / Codex | the session id if the host exposes one; else `<host> <date>` |
+| Claude Code / Codex | a session deep link if the harness offers one; else the session id; else `<host> <date>` |
 | Dispatched subagent | the primary session's reference plus ` agent=<child label>` |
 
 | Task status | Meaning | Who sets it |
