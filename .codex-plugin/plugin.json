@@ -1,7 +1,7 @@
 {
   "name": "checksum",
-  "version": "0.4.0",
-  "description": "A minimal, evidence-driven development workflow: design, plan, execute, finish. Upfront design and fresh verification carry the quality load; testing policy is spec-anchored by default and configurable per project.",
+  "version": "0.5.0",
+  "description": "A minimal, evidence-driven design, plan, execute, and finish workflow with diagnosis for unexplained failures. Upfront design and fresh verification carry the quality load; testing policy is spec-anchored by default and configurable per project.",
   "author": {
     "name": "plukevdh",
     "url": "https://github.com/plukevdh"
@@ -9,18 +9,19 @@
   "homepage": "https://github.com/plukevdh/checksum",
   "repository": "https://github.com/plukevdh/checksum",
   "license": "MIT",
-  "keywords": ["sdd", "workflow", "design", "planning", "verification", "goals"],
+  "keywords": ["sdd", "workflow", "debugging", "design", "planning", "verification", "goals"],
   "skills": "./skills/",
   "interface": {
     "displayName": "Checksum",
-    "shortDescription": "Design, plan, execute, finish - with evidence, not ritual.",
-    "longDescription": "A minimal development workflow for coding agents. Design and plan before code, execute against spec-anchored acceptance checks, and finish only with fresh verification evidence. Configurable per project through a plain-markdown preferences file.",
+    "shortDescription": "Diagnose when needed; design, plan, execute, and finish with evidence.",
+    "longDescription": "A minimal development workflow for coding agents. Diagnose unexplained failures before fixing, design and plan before code, execute against spec-anchored acceptance checks, and finish only with fresh verification evidence. Configurable per project through a plain-markdown preferences file.",
     "developerName": "plukevdh",
     "category": "Developer Tools",
     "capabilities": ["Interactive", "Read", "Write"],
     "websiteURL": "https://github.com/plukevdh/checksum",
     "defaultPrompt": [
       "Use checksum to design and build a new feature.",
+      "Diagnose and fix this failure with checksum.",
       "Resume the checksum plan in this repo."
     ]
   }

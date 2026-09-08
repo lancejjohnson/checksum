@@ -7,8 +7,8 @@
   "plugins": [
     {
       "name": "checksum",
-      "description": "A minimal, evidence-driven development workflow: design, plan, execute, finish.",
-      "version": "0.4.0",
+      "description": "A minimal, evidence-driven design, plan, execute, and finish workflow with diagnosis for unexplained failures.",
+      "version": "0.5.0",
       "source": "./"
     }
   ]

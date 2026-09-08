@@ -26,11 +26,33 @@ contradict a project-level one.
 
 ### `## general`
 
-- `artifacts dir: <path>` — where artifact directories are created.
-  Default: `docs/checksum`.
+- `artifacts dir: <path>` — where artifact directories are created. Skills refer
+  to this configured value as `<artifacts dir>`. Default: `docs/checksum`.
 - `activation: manual | suggest` — `manual`: run only when explicitly invoked.
   `suggest` (default): when a design-bearing change starts without checksum, offer it
   once and respect the answer.
+
+### `## debug`
+
+- `containment: allow-with-approval | require-cause` — default
+  `allow-with-approval`. A temporary production containment needs explicit user
+  approval, rollback, monitoring, risk, an owner, and a durable removal follow-up;
+  it is applied and delivered only through the normal checksum build and review
+  flow, and diagnosis remains open. `require-cause` permits no deployed containment
+  before a confirmed causal path; local diagnostic edits are allowed but reverted.
+  A durable follow-up may be an external issue/ticket or a stable heading in a
+  committed project tracking file, never a checksum artifact.
+- `uncertain-fix: allow-with-approval | require-cause` — default
+  `allow-with-approval`. Controls permanent corrections at probable or unknown
+  root-cause confidence separately from temporary containment. Approval requires
+  residual risk, rollback, a falsifying/monitoring signal, an owner, and a durable
+  follow-up outside the current plan's completion set using either carrier
+  described above.
+- `hypothesis-limit: <positive integer>` — default `3`. After this many disproved
+  or inconclusive hypotheses on one failure, stop and ask which direction to take;
+  the limit is an escalation point, not evidence of an architectural defect. An
+  explicit choice to continue grants and records a fresh budget.
+- Free-form: required diagnostics, observability rules, incident conventions.
 
 ### `## design`
 
@@ -52,9 +74,10 @@ contradict a project-level one.
 - `goals: offer | auto | never` — default `offer`. Whether to propose (or set) a
   `/goal` completion condition when starting execution on a host that supports goals.
 - `delegation: auto | inline | subagent-per-task` — default `auto`, which follows
-  the host's best practice: fresh subagent per task where a dispatch tool exists
-  (Claude Code), direct inline execution elsewhere (Codex). Set explicitly to
-  override on either host.
+  actual capability: fresh subagent per task when a native dispatch tool is in the
+  current tool list (Claude Code's Task tool; Codex's `spawn_agent` when
+  `features.multi_agent` is enabled), direct inline execution otherwise. Set
+  explicitly to override on any host.
 - `reviewer: auto | cross-model | subagent | self` — default `auto`: best available
   rung of the ladder (cross-model → clean-context subagent → structured self-pass).
   Adversarial review runs at the end of execution, once per delivery unit.
@@ -67,6 +90,9 @@ contradict a project-level one.
 - `review-depth: standard | deep` — default `standard`; `deep` additionally asks
   the reviewer to trace every design edge case to a test and inspect test honesty
   line by line.
+- `fix-attempt-limit: <positive integer>` — default `3`. After this many
+  consecutive implementation attempts fail despite a confirmed cause, stop and ask
+  whether to revise the fix boundary/plan, reopen diagnosis, or pause.
 - Free-form: linting/formatting expectations, commit cadence, logging rules.
 
 ### `## finish`
@@ -96,12 +122,18 @@ artifacts from every changeset (committed only on explicit request).
 ---
 execute.testing: spec-anchored
 execute.goals: offer
+execute.fix-attempt-limit: 3
 ---
 
 # Checksum Preferences
 
 ## general
 - activation: suggest
+
+## debug
+- containment: allow-with-approval
+- uncertain-fix: allow-with-approval
+- hypothesis-limit: 3
 
 ## execute
 - reviewer: cross-model

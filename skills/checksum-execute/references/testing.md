@@ -39,11 +39,6 @@ For each task:
 3. Run the task's tests and the neighboring tests they affect; fix code (not tests)
    until green with clean output.
 
-**Bug fixes are the exception that keeps observed-red:** write the regression test
-(or reproduce the symptom) and watch it fail against the pre-fix code before
-fixing. Here red is cheap and meaningful — it proves the test captures the bug.
-Never close a bug fix without a regression check that failed first.
-
 ### `strict-tdd`
 
 Classic red-green-refactor: no production code without an observed failing test;
@@ -60,6 +55,22 @@ re-enters the workflow at design.
 
 ## Universal rules (every mode)
 
+- **Permanent bug fixes keep observed-red.** Write the regression test (or
+  executable reproduction) from the diagnosis contract or recorded inline
+  diagnosis and watch it fail against the pre-fix behavior before fixing. This
+  applies to every kept-code mode and cannot be disabled by project preference.
+  Record the exact command and failing result in the task Result; for light work,
+  record it in the host task tracker or an explicit execution evidence block.
+  `lean` output is throwaway and must re-enter at design before becoming kept code.
+  If reproduction is genuinely blocked, record the exact blocker and best
+  available evidence, define the strongest executable proxy check, and get the
+  user's explicit acceptance of this exception before implementation. Carry that
+  exception and residual risk into finish; never claim the proxy was observed
+  failing against the original bug.
+- **Containment uses a suppression check, not the permanent regression check.**
+  Derive it from the affected symptom, observe it fail before containment and pass
+  afterward, and keep it linked to the open diagnosis. This proves temporary
+  restoration only; it does not discharge the permanent fix's observed-red rule.
 - **No tautology.** A test's expected value never comes from executing the code
   under test, and a test never re-runs the implementation to compute "expected".
 - **Assert real behavior, not mocks.** Mock only what cannot be used directly

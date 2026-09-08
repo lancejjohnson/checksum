@@ -21,6 +21,10 @@ frontmatter (`tasks/NN-*.md`; semantics in the router's `references/lifecycle.md
 — mirror it into the host's task tracker for visibility, but the files are the
 source of truth.
 
+For light work, first restate the active task, acceptance checks, and any complete
+`## Diagnosis`, `## Containment`, or residual-risk block from the approved chat
+plan. That explicit restatement is the handoff into execution.
+
 ## Choose the delegation mode
 
 With `delegation: auto` (the default), the deciding question is whether a native
@@ -70,7 +74,8 @@ A task is claimable when its `status` is `pending` and every task in `depends` i
    own delivery unit — run a task-scoped adversarial review first (see below),
    incorporate the findings, then hand to `checksum-finish` for **task finalize**:
    loud completeness scan, fresh scoped verification, delivery (commits authorized
-   by plan approval; pushes/PRs always get the user's go), and worktree cleanup.
+   only by the task-finalize local-review go; pushes/PRs require that same go), and
+   worktree cleanup.
    In stacked flows, work each `pr` task on its own branch cut from the previous
    task's branch — in its own worktree when agents run in parallel — so the PRs
    stack cleanly.
@@ -80,13 +85,34 @@ Result section — that is visible progress for other agents, not failure.
 
 ## When checks fail
 
-Find the cause before editing further — read the error, trace it to the root, fix
-the root. Never weaken a test, delete an assertion, or special-case the check to get
-to green; if the check itself is wrong, that is a plan defect — say so and route
-back through the router.
+If the cause is not confirmed by causal evidence, invoke `checksum-debug` before
+editing further; that skill loads `## debug` preferences and owns the hypothesis
+limit. Carry its [diagnosis contract](../checksum-debug/references/diagnosis.md)
+into the affected task. For a bug fix, the regression condition must be present in
+the task or approved chat plan and observed failing against the broken behavior as
+required by [references/testing.md](references/testing.md), unless that policy's
+blocked-reproduction exception was explicitly accepted. Never weaken a test, delete
+an assertion, or special-case the check to get to green; if the check itself is
+wrong, that is a plan defect — say so and route back through the router.
 
-Three failed fix attempts on the same problem means the plan or design has a gap:
-stop, summarize the evidence, and return to the router rather than thrashing.
+When the error itself supplies causal evidence (for example, a compiler diagnostic
+that identifies the invalid symbol), record observed vs. expected behavior, that
+evidence, and the regression condition in the affected task or approved chat plan,
+then continue only if the approved plan already describes the correction and no new
+containment or fix-boundary change was introduced. Otherwise return to the router
+for plan/design approval. Do not invoke debug merely to produce a formal contract.
+
+Under subagent-per-task execution, the child stops at an unconfirmed failure and
+reports its raw evidence without trying speculative fixes. The primary agent invokes
+debug, owns diagnosis/task updates and the escalation decision, and dispatches again
+only when the cause is confirmed or the user has explicitly approved proceeding
+under `uncertain-fix` with the complete `### Residual risk` section recorded. The
+approved plan must still describe the correction.
+
+After the configured consecutive implementation-attempt limit (default 3) fails
+despite a confirmed cause, stop and show the evidence. Ask whether to revise the
+fix boundary or plan, reopen diagnosis, or pause; repeated failure is an escalation
+signal, not proof of an architectural defect.
 
 ## Review before handoff
 
@@ -114,5 +140,5 @@ reportable; guessing is not.
 When every task is `done` with observed passing checks and the change-wide review
 is incorporated and recorded, report the plan path, per-task results, and the
 review record to the router — it will route to `checksum-finish`. Beyond
-`deliver: commit` tasks in the approved plan, execute never commits — and never
-pushes or publishes; delivery belongs to finish, behind the user's review gate.
+recording the requested boundary in `deliver`, execute never commits, pushes, or
+publishes; every delivery belongs to finish, behind the user's local-review gate.

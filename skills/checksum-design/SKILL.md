@@ -17,8 +17,14 @@ first. Honor every directive in the `## design` preferences section.
 
 - Explore the repository first: relevant code paths, existing patterns, recent
   commits, prior `docs/checksum/` artifacts that touch the same area.
-- For a bug: reproduce it before designing the fix. If reproduction is impossible,
-  record exactly what blocked it. The reproduction becomes the regression check later.
+- For a bug: require the `checksum-debug`
+  [diagnosis contract](../checksum-debug/references/diagnosis.md) first unless the
+  cause is already confirmed by causal evidence. In either case require observed
+  vs. expected behavior, a reproduction (or the exact reason it is blocked),
+  causal evidence, and a regression condition. Carry those facts plus confidence
+  and fix boundary into the design; do not make the design phase repeat or rewrite
+  an existing investigation. If neither a diagnosis nor confirmed evidence exists,
+  return to the router so it can invoke debug; do not diagnose inside design.
 - Ask clarifying questions **one at a time**, only ones that change scope, behavior,
   risk, or external effects. Prefer multiple-choice when the options are real.
   Use your judgment for details that don't change any of those.

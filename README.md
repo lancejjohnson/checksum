@@ -2,7 +2,7 @@
 
 A minimal, evidence-driven development workflow for coding agents:
 
-**design → plan → execute → finish**
+**design → plan → execute → finish**, with **debug when the cause is unknown**
 
 One plugin, two hosts (Claude Code and Codex), zero runtime dependencies — the
 entire framework is markdown. Built to start small and grow with your preferences.
@@ -20,6 +20,10 @@ entire framework is markdown. Built to start small and grow with your preference
   regressions.
 - **Evidence over claims.** No phase completes on "should work". Fresh command
   output, complete and read, or the claim isn't made.
+- **Diagnose before fixing.** Debug is an entry and recovery mode, not another
+  mandatory phase: reproduce, locate the failing boundary, test one falsifiable
+  hypothesis at a time, then hand a causal diagnosis and regression condition to
+  the appropriately light or full fix flow.
 - **The artifact scales, the ceremony doesn't.** Every change gets design thinking,
   a plan with acceptance checks, your approval, and verified evidence — but only
   full-weight changes get artifact files. Light work (most bug fixes) runs the
@@ -29,9 +33,10 @@ entire framework is markdown. Built to start small and grow with your preference
   you explicitly ask — they stay out of every changeset. When the change ships, the
   plan is distilled into the PR description (or commit body) as the permanent
   record of the decisions, and the working papers are cleared.
-- **Host-adaptive.** On Claude Code, execution dispatches a fresh subagent per task
-  with the primary agent verifying every result. On Codex, execution runs inline
-  and plugs the plan's completion condition into `/goal` for long autonomous runs.
+- **Capability-adaptive.** Execution dispatches a fresh subagent per task when the
+  current harness exposes a native dispatch tool, with the primary agent verifying
+  every result. Without one it runs inline and uses `/goal`, where available, for
+  long autonomous runs.
 
 ## Install
 
@@ -83,7 +88,7 @@ codex features enable goals          # /goal - autonomous runs against the plan'
 codex features enable multi_agent    # optional: spawn_agent - flips execution to subagent-per-task
 ```
 
-Verify inside Codex with `/skills` (all five `checksum*` skills should list) and
+Verify inside Codex with `/skills` (all six `checksum*` skills should list) and
 start with `$checksum <what you want to build>`. Cross-model review additionally
 wants the `claude` CLI installed and authenticated so Codex can dispatch reviews to
 it; without it, review falls back to a clean-context subagent.
@@ -96,21 +101,29 @@ Invoke the router and describe the change:
   task — the skills activate when relevant)
 - Codex: `$checksum <what you want to build>`
 
-The router classifies the task (spike / light / full), routes through the phases,
-and stops at every gate:
+The router sends unexplained failures to debug before entering the build loop,
+classifies the resulting change (spike / light / full), routes through the phases,
+and stops at every gate. Debug produces a diagnosis contract — reproduction,
+evidence, causal confidence, fix boundary, and regression condition — rather than
+implementation.
 
 | Phase | Output (full weight) | Gate |
 |---|---|---|
 | design | `docs/checksum/YYYY-MM-DD-<slug>/design.md` | you approve the design |
 | plan | `.../plan.md` — tasks with spec-derived acceptance checks | you approve the plan |
 | execute | implementation task by task, evidence per task, adversarial review per delivery unit | agent stops on blockers |
-| finish | loud completeness scan + fresh verification + condensed record + cleanup | **you review locally before any push/PR** |
+| finish | loud completeness scan + fresh verification + condensed record + cleanup | **you review locally before any commit/push/PR/worktree cleanup** |
 
 Finish runs at two scopes: **task finalize** ships a delivery-flagged task (stacked
 commit/PR, then its worktree is cleaned) and **plan finalize** verifies the
 integrated whole, ships the condensed plan record, and clears the working papers.
 Anything incomplete is reported loudly — every gap with its exact resume action —
 and finalize refuses to proceed past it.
+
+On a bug or unexpected failure, invoke `$checksum-debug` in Codex or
+`/checksum:checksum-debug` in Claude Code directly, or let the checksum router select
+it. Diagnosis returns to the same user-chosen light/full flow; it does not force a
+written plan.
 
 Light-weight tasks run the same phases and gates with design and plan presented in
 chat instead of files. Artifact files are never committed unless you ask.
@@ -149,6 +162,7 @@ correction as a preference — that's the intended way this framework grows.
 ```
 skills/
   checksum/            router: weight classification, phase selection, preferences
+  checksum-debug/      diagnostic entry/recovery mode + diagnosis contract
   checksum-design/     design phase + template
   checksum-plan/       plan phase + template
   checksum-execute/    execute phase + testing policy, goals, delegation refs

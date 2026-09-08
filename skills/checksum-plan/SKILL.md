@@ -44,6 +44,24 @@ testing quality is won:
 - Cover the design's edge cases for this task, not just the happy path.
 - For non-code work (config, docs, generated files), the check is the narrowest
   direct validator, with a note on why a unit test doesn't apply.
+- For a defect, copy the checksum-debug
+  [diagnosis contract](../checksum-debug/references/diagnosis.md) and exact
+  regression condition into the task's `## Diagnosis` section. In a light chat
+  plan, include the complete diagnosis block alongside the task and require execute to
+  restate it before editing. If a containment is active, also carry its risk,
+  rollback, monitoring, owner, removal condition, and durable follow-up into
+  `## Containment`; the follow-up must live in a durable tracker outside this
+  plan's completion set — an external issue/ticket or committed project tracking
+  entry, as defined by the router's
+  [lifecycle](../checksum/references/lifecycle.md#durable-operational-follow-up) —
+  so active containment does not deadlock finalize. Ensure the follow-up entry
+  contains the lifecycle's required resume state; a bare link is incomplete. Put
+  the same containment block in a light chat plan. A correction pursued at probable
+  or unknown confidence similarly carries the diagnosis contract's `### Residual
+  risk` section and a durable follow-up. A blocked reproduction carries its
+  `### Reproduction exception` section. A containment task's acceptance checks must
+  prove that the affected behavior is restored and that its rollback procedure is
+  executable.
 
 ## Write the plan
 
@@ -62,7 +80,8 @@ ordering constraints — an interface consumed, a file both would edit — so th
 everything else stays parallelizable, and `deliver`:
 
 - `plan` (default) — delivered together at finish.
-- `commit` — task-scoped commit when done; plan approval authorizes these commits.
+- `commit` — task-scoped commit when done; the flag records intent, but task
+  finalize still requires the user's local-review approval before committing.
 - `pr` — stacked branch/PR per task (GitHub stacking); each push still gets a
   per-delivery user go. Flag `pr` only when tasks are genuinely independently
   reviewable, and say so when presenting the plan for approval.

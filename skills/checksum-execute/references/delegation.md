@@ -64,6 +64,9 @@ A subagent report of success is a claim. Verification is yours.
 - Review found problems → dispatch one focused fix subagent with the findings.
 - Same task fails review twice → take it over inline; something about the task
   needs judgment the dispatch loop lacks.
+- An implementation or check fails for an unconfirmed reason → the child stops and
+  reports raw evidence; the primary invokes `checksum-debug`, updates the task, and
+  decides whether the plan remains valid before any further dispatch.
 - The fix reveals a plan defect → stop dispatching and return to the router.
 
 ## Parallelism

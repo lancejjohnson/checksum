@@ -10,6 +10,19 @@ deliver: plan
 **Plan:** [../plan.md](../plan.md) · **Design:** [../design.md](../design.md)
 (Global constraints in the plan apply to this task.)
 
+## Diagnosis
+
+[Observed vs. expected behavior, reproduction, evidence, root-cause confidence,
+fix boundary, and regression condition from checksum-debug's Diagnosis Contract.
+When applicable, include its complete `### Residual risk` and
+`### Reproduction exception` sections. Omit for non-defects.]
+
+## Containment
+
+[For an approved temporary mitigation: action, risk, rollback, monitoring, removal
+condition, explicit owner, and the durable follow-up outside this plan's completion
+set that owns removal. Omit when none.]
+
 **Files:**
 - Create: `exact/path/new_file.py`
 - Modify: `exact/path/existing.py`
@@ -41,4 +54,6 @@ Expect: <specific output, count, or exit status>
 ## Result
 
 [Filled on completion: commands run, actual output summary, deviations from the
-task and why. If blocked: what was tried and what blocks.]
+task and why. For a permanent defect fix: the exact observed-red command and failing
+result. For containment: the pre/post suppression-check results. If blocked: what
+was tried and what blocks.]

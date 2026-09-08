@@ -26,9 +26,21 @@ changes can argue against the original reasoning instead of rediscovering it.
   spike / light / full). Superpowers' "when in doubt, take the heavier path"
   ratchet is replaced with asking: the user owns the weight decision, at
   classification time and when scope grows mid-task.
+- obra/superpowers'
+  [systematic-debugging skill](https://github.com/obra/superpowers/blob/main/skills/systematic-debugging/SKILL.md)
+  contributes its useful core: preserve and reproduce the failure, locate the
+  failing boundary, trace bad state to its source, compare working and failing
+  paths, and test one falsifiable hypothesis at a time before implementing a
+  permanent correction.
 
 **Rejected:**
 - Strict TDD as an iron law ("delete the code and start over") — see research below.
+- Debug as rigid four-phase ceremony for every technical issue. Checksum makes it
+  an entry/recovery mode with a compact diagnosis contract; most fixes remain a
+  light chat flow. Its hypothesis limit is an escalation point, not proof that the
+  architecture is wrong. The operational policy, including approved pre-cause
+  containment, lives in the
+  [debug skill](../skills/checksum-debug/SKILL.md).
 - The fixed, non-configurable methodology — checksum is preference-driven.
 - Session-start hook injection and rationalization-table tone; checksum relies on
   skill descriptions and explicit invocation, and keeps failure-mode tables short.

@@ -6,6 +6,7 @@ Each full-weight change gets one directory:
 
 ```
 docs/checksum/YYYY-MM-DD-<slug>/
+  diagnosis.md           optional, only when the user asks to retain one
   design.md              Status: Draft | Approved
   plan.md                Status: Draft | Approved | Active | Complete
                          (overview: goal, global constraints, completion
@@ -52,20 +53,44 @@ reclaimed — re-verify any partial work first. The numeric filename prefix sugg
 default order; `depends` is the hard gate.
 
 **Delivery flag:** `plan` (default) delivers everything together at finish;
-`commit` makes a task-scoped commit once the task is done and verified — approving
-a plan that carries `deliver: commit` flags *is* the explicit authorization for
-those local commits; `pr` additionally pushes a stacked branch/PR, which is an
-external effect and always gets a per-delivery user go (or a finish preference
-saying otherwise).
+`commit` requests a task-scoped commit once the task is done and verified; `pr`
+requests a stacked branch/PR. The flag defines the intended delivery boundary, not
+permission to deliver: every task finalize presents the scoped local-review package
+and waits for explicit user approval before committing, pushing, opening a PR, or
+cleaning its worktree. On a no-go, leave delivery pending or let the user explicitly
+change `deliver` to `plan` when the changes already live in the integration tree;
+record that choice in Result as an audit trail. Uncommitted work on an isolated
+branch/worktree cannot roll into plan delivery: preserve and report it, leave
+delivery pending, and pause.
+
+## Durable operational follow-up
+
+Open containment or an unconfirmed-cause correction needs a follow-up outside the
+current plan's completion set so the plan can ship without losing the remaining
+work. Prefer a resolvable external issue/ticket URL or identifier. If the project
+has no tracker, use a stable heading in a committed project tracking file such as
+`KNOWN_ISSUES.md`; it is ordinary shipped project documentation, never a checksum
+artifact or plan file. Creating or updating either carrier follows the normal
+external-effect or code-review gates.
+
+The follow-up entry itself, not only its link, carries enough state to resume
+without the working papers: current evidence, confidence, next investigation
+signal, operational risk, owner, and removal/completion condition.
 
 The slug is short, kebab-case, and names the change (`2026-08-12-retry-budget`).
 The date is the day the design started; it never changes across phases. Keeping
 design and plan together means the plan can cite the design by relative link and
 reviewers see the whole story in one place.
 
-Artifact files exist only for **full-weight** changes. Light work carries the same
-ceremony in chat: the approved chat plan takes the plan file's place, and task
-tracking takes the checkboxes' place.
+Artifact files exist only for **full-weight** changes, except an explicitly
+requested standalone `diagnosis.md`, which uses the same dated-directory and slug
+rule and seeds that directory if work later becomes full. Light work carries the
+same ceremony in chat: the explicit approved chat-plan message takes the plan
+file's place, and the host's task tracker takes the task files' place when
+available. Before its first edit, execute restates the active task, acceptance
+checks, and any diagnosis, containment, or residual-risk block from that message;
+finish includes them in its review package. This explicit handoff is the carrier —
+unstated conversation memory is not.
 
 ## Artifacts stay out of changesets
 

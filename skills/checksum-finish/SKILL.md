@@ -12,13 +12,13 @@ Finalize runs at two scopes:
 - **Plan finalize** — the whole change once every task is `done`: verify the
   integrated result, deliver what remains, ship the condensed record, clean up.
 
-Both open with a completeness scan that is **loud on purpose**, and neither pushes
-or PRs before the user's explicit go (`deliver: commit` tasks carry commit
-authorization from plan approval; pushes never inherit it). Adversarial review runs
-at the end of execute — finish confirms its record; it never runs a substitute.
-Honor every directive in the `## finish` preferences section. For light work, read
-"the plan" as the approved chat plan; artifact and worktree steps that don't exist
-simply don't apply.
+Both open with a completeness scan that is **loud on purpose**, and neither delivers
+anything before the user's explicit local-review go. A `deliver` flag records the
+intended boundary, not authorization. Adversarial review runs at the end of execute
+— finish confirms its record; it never runs a substitute. Honor every directive in
+the `## finish` preferences section. For light work, read "the plan" as the approved
+chat plan; artifact and worktree steps apply only when a retained diagnosis or
+checksum-created worktree actually exists.
 
 ## Step 0: Completeness scan — loud by design
 
@@ -37,12 +37,45 @@ route back through the router (or ask, when the gap needs a user decision). Neve
 proceed past a gap, never bury one mid-report, never soften "incomplete" into
 "mostly done".
 
-What the scan checks — **task scope:** every step checked; acceptance checks
-observed passing; Result filled; task-scoped review record present and resolved;
-all `depends` done. **Plan scope:** every task `done` (list each pending, claimed,
-or blocked one); every design success criterion mapped to evidence; change-wide
-review record present and resolved; every delivery-flagged task actually delivered
-(commit hash / PR URL in its Result).
+What the scan checks:
+
+- **Task scope:** every step checked; acceptance checks observed passing; Result
+  filled; task-scoped review record present and resolved; all `depends` done. For a
+  permanent defect fix, the regression condition was observed failing against
+  broken behavior and its command plus failing result are recorded, or its approved
+  `### Reproduction exception` and passing proxy check are present. For
+  containment, the suppression check was observed failing before containment and
+  passing after it.
+- **Plan scope:** every task `done` (list each pending, claimed, or blocked one);
+  every design success criterion mapped to evidence; change-wide review record
+  present and resolved; every delivery-flagged task actually delivered (commit hash
+  / PR URL in its Result). A task explicitly changed to `deliver: plan` is part of
+  plan delivery instead. An isolated task still pending granular delivery remains
+  incomplete and pauses plan finalize.
+- **Active containment at either scope:** risk, rollback, monitoring, removal
+  condition, explicit owner, and a durable follow-up outside the current plan's
+  completion set.
+- **Unconfirmed-cause correction at either scope:** residual risk, rollback,
+  falsifying/monitoring signal, explicit owner, and durable follow-up outside the
+  current plan's completion set.
+- **Blocked-reproduction exception at either scope:** exact blocker, strongest
+  proxy check, residual risk, and explicit user-acceptance reference.
+
+Missing fields block task or plan finalize. Neither scope can close active
+containment or an unconfirmed-cause correction unless user acceptance is captured
+in the diagnosis/approved plan and the intended shipped record includes a
+resolvable durable follow-up: an external issue/ticket URL or identifier, or a
+stable heading in a committed project tracking file outside the checksum artifacts
+directory. For an open diagnosis, that follow-up must contain its current evidence,
+confidence, next investigation signal, and operational-risk block. A
+blocked-reproduction exception instead requires its own explicit acceptance
+reference; it does not require a follow-up. Gate 3 presents the acceptance for
+confirmation. A missing or stale follow-up is incomplete: ask before creating or
+updating an external tracker item, or return to plan/execute to add and review an
+in-repo tracking entry, then rerun the scan. If the user chooses keep-as-is at Gate
+3, only an already populated external tracker can be the permanent risk record;
+otherwise report that no durable code record shipped and retain the artifact or
+light task-tracker state without closing the operational state.
 
 ## Task finalize
 
@@ -52,16 +85,29 @@ For a completed `deliver: commit | pr` task handed over by execute:
 2. **Fresh scoped verification:** run the task's acceptance checks and the
    neighboring tests they affect, now — freshness rules in
    [references/verification.md](references/verification.md).
-3. **Deliver:**
+3. **Local review — hard stop:** present the task-scoped form of the Gate 3 package
+   (outcome, evidence, review resolutions, operational risk, status/diff, intended
+   delivery) and wait for explicit user approval. No commit, push, PR, or worktree
+   cleanup before the go. A no-go does not force delivery: offer to pause with the
+   task still pending delivery, revise the work, or explicitly change `deliver` to
+   `plan` so it rolls into plan finalize **only when its changes already live in the
+   integration tree**. Isolated branch/worktree changes cannot be deferred into plan
+   delivery without moving them: leave that delivery pending, preserve and report
+   the worktree path, branch, and status, and pause. Record the choice in Result;
+   changing scope, dependencies, or behavior still returns the plan to Draft for
+   approval.
+4. **Deliver:**
    - `commit`: make the task-scoped commit — the condensed task record is the
-     commit body (outcome, interfaces produced, checks + results). Never stage
-     artifacts.
-   - `pr`: **hard stop for the user's go** (a push is an external effect, every
-     time). Then push the stacked branch and open the PR against the previous
-     task's branch (the base branch for the first), with the condensed task record
-     as the PR description: outcome, interfaces, failure behavior, checks with
-     evidence, review summary.
-4. **Clean up:** write the commit hash / PR URL into the task's Result, then
+     commit body (outcome, interfaces produced, checks + results, review summary,
+     observed-red or suppression-check evidence for defects, and any containment,
+     unconfirmed-cause correction, or blocked-reproduction exception with every
+     field required by Step 0). Never stage artifacts.
+   - `pr`: push the stacked branch and open the PR against the previous task's
+     branch (the base branch for the first), with the condensed task record as the
+     PR description: outcome, interfaces, failure behavior, checks with evidence,
+     review summary, defect red/suppression evidence, and the same Step 0
+     operational-risk record when applicable.
+5. **Clean up:** write the commit hash / PR URL into the task's Result, then
    remove the task's worktree if checksum created it (`worktrees: clean`, the
    default) — the branch and PR carry the work, and later PR feedback checks the
    branch out fresh. A worktree holding uncommitted or untracked files is never
@@ -82,9 +128,14 @@ Evidence rules: [references/verification.md](references/verification.md).
    "passed earlier this session" prove nothing.
 2. Build the evidence matrix: each design success criterion → the implementation
    that satisfies it → the fresh command and result that proves it.
-3. For a bug fix: reproduce the original symptom and show it is gone, and confirm
-   the regression test exists and failed against the pre-fix code at some point in
-   this change's history.
+3. For a permanent bug fix: reproduce the original symptom and show it is gone,
+   confirm the regression test exists, and cite its recorded command and failing
+   pre-fix result. If the user explicitly accepted a blocked-reproduction exception,
+   run the approved proxy check instead and carry the blocker and residual risk into
+   the evidence matrix; do not describe it as observed-red.
+4. For containment: run the suppression check and label its passing evidence as
+   symptom suppression, not correction. Do not claim it satisfies the permanent
+   regression condition.
 
 Any required check fails → keep the plan Active, report the failure, and return to
 execute. Do not proceed to review with red checks.
@@ -113,11 +164,13 @@ Present a review package and **wait**:
 2. The evidence matrix (criterion → proof → result).
 3. Review findings and what changed in response — each finding with its
    resolution, or the evidence-backed reason it was rejected.
-4. `git status` and a diff summary (`git diff --stat`, plus untracked files), with
+4. Any active containment, unconfirmed-cause correction, or blocked-reproduction
+   exception, including the fields its Step 0 rule requires.
+5. `git status` and a diff summary (`git diff --stat`, plus untracked files), with
    an offer to walk through any file. Checksum artifact files are not part of the
    change — note that they exist and are excluded, rather than mixing them into
    the diff.
-5. Delivery ledger: tasks already shipped (commit hashes, PR URLs) vs. what this
+6. Delivery ledger: tasks already shipped (commit hashes, PR URLs) vs. what this
    finalize will deliver.
 
 Ask the user to review locally and say how to proceed. **No commit, push, PR,
@@ -130,7 +183,14 @@ happens after the go, not whether the gate exists.
 **Distill the record first:** condense the design and plan into the artifact that
 ships with the code — goal, chosen approach and its decisive rationale, notable
 rejected alternatives, task outline with where each shipped (hashes/PR URLs),
-verification evidence summary, review summary. This becomes the PR description
+verification evidence summary, review summary, and any accepted containment with
+its owner and removal follow-up, or unconfirmed-cause correction with its residual
+risk and follow-up, or blocked-reproduction exception with its blocker, proxy
+check, and residual risk. For permanent defect fixes, include the observed-red
+command and failing result; for containment, include the suppression-check evidence.
+If diagnosis remains open, confirm Step 0 already verified that the durable
+follow-up contains its current evidence, confidence, and next investigation signal.
+This becomes the PR description
 (merged into the repo's PR template) or, for commit-only delivery, the commit
 message body — so the plan's decisions stay referable forever after the working
 papers are cleared.
@@ -157,7 +217,7 @@ state honestly):
 1. Set `**Status:** Complete` on the plan file (light: close out the task tracker).
 2. Remove remaining checksum-created worktrees (`worktrees: clean` default; same
    never-force rule as task finalize).
-3. Clear the artifact directory — design, plan, task files — per
+3. Clear the artifact directory — diagnosis, design, plan, and task files — per
    `artifacts: clear` (the default). Two conditions guard this: the completeness
    scan passed, and the condensed record shipped somewhere durable (PR or commit).
    If delivery was "keep as-is" with no durable record, keep the artifacts and say

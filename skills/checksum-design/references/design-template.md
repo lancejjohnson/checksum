@@ -25,8 +25,15 @@ the plan and the verification matrix at finish.]
 
 ## Current State
 
-[What the repository does today in this area. For a bug: reproduction steps, actual
-vs. expected result, and root cause.]
+[What the repository does today in this area.]
+
+## Diagnosis (defects only)
+
+[Observed vs. expected behavior, reproduction or its exact blocker, causal
+evidence, confidence, fix boundary, and regression condition. When applicable,
+include the checksum-debug contract's complete `### Residual risk`,
+`### Reproduction exception`, and `### Containment` sections. Omit for
+non-defects.]
 
 ## Constraints
 
