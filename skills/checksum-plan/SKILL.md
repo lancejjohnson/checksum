@@ -17,6 +17,14 @@ Require preferences, a slug, and an Approved design from the `checksum` router.
 If the design is missing or stale, return to the router. Honor every directive in
 the `## plan` preferences section.
 
+Before writing any plan or task, read the complete design and confirm it has no
+unanswered questions or uncertain assumptions whose answer changes scope,
+behavior, risk, implementation choices, verification, or external effects.
+Status alone is not proof. Return each consequential question to the user one
+at a time, record the answer in a revised design, and obtain renewed design
+approval. Do not copy a question into the plan, turn it into an implementation
+step, or let an implementer choose.
+
 ## Shape the work
 
 Before writing tasks, read the code paths the design touches and decide:

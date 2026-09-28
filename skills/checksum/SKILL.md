@@ -103,7 +103,9 @@ existing artifact directories. Then select the first phase that applies:
 
 1. **design** — no design exists, or it is incomplete or stale (its goal,
    constraints, or approach no longer describe the requested work).
-2. **plan** — design is Approved but no current plan (overview + task files) exists.
+2. **plan** — design is question-complete and Approved but no current plan
+   (overview + task files) exists. Any unanswered design question routes back to
+   design/user clarification, not plan.
 3. **execute** — plan is Approved or Active with tasks not yet `done` (pending,
    claimed, or blocked) or with failing checks.
 4. **finish** — every task file is `done` and verified, plan status still Active.
@@ -141,7 +143,8 @@ plan-only work.
 ## Gates and interrupts
 
 - Never begin implementation before the design is approved — for light tasks the
-  design is two sentences in chat, but the approval is still a hard stop.
+  design is two sentences in chat, but the approval is still a hard stop. An
+  unanswered design question also blocks planning regardless of status.
 - Pause and ask when you hit real ambiguity, growing scope, a destructive action,
   or an external effect (push, publish, API calls with side effects).
 - If an artifact turns out stale mid-phase, return to the earlier phase. Do not

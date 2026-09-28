@@ -68,6 +68,13 @@ happens in each. Whatever is missing here will be missing from the code.]
 [How the implementation will prove each success criterion: test approach, manual
 checks, and anything that needs special setup.]
 
-## Open Questions & Assumptions
+## Resolved Questions & Assumptions
 
-- [Assumption — mark **uncertain** where evidence is thin.]
+[Record consequential questions only after the user answers them. An Approved
+design has no unanswered questions; an unanswered consequential question keeps
+the design Draft/Blocked and prevents planning.]
+
+- **Question:** [What needed deciding?] **Answer:** [Decision.] **Source:**
+  [User and date.]
+- **Assumption:** [Bounded non-material assumption.] **Evidence:**
+  [Why it is safe to decide.] **Impact if false:** [What changes or blocks.]

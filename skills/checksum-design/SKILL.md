@@ -25,9 +25,13 @@ first. Honor every directive in the `## design` preferences section.
   and fix boundary into the design; do not make the design phase repeat or rewrite
   an existing investigation. If neither a diagnosis nor confirmed evidence exists,
   return to the router so it can invoke debug; do not diagnose inside design.
-- Ask clarifying questions **one at a time**, only ones that change scope, behavior,
-  risk, or external effects. Prefer multiple-choice when the options are real.
-  Use your judgment for details that don't change any of those.
+- Ask clarifying questions **one at a time** as soon as they are found, for
+  anything that changes scope, behavior, risk, implementation choices,
+  verification, or external effects. Prefer multiple-choice when the options
+  are real. Record each answer and its source in the design, then revise affected
+  sections. Do not defer a consequential question to an “open questions” list,
+  copy it into a plan, or ask an implementer to decide. Use your judgment only
+  for details that do not change any of those.
 - If the request contains multiple independent subsystems, say so and decompose
   first — one design per independently shippable piece.
 
@@ -63,11 +67,17 @@ Re-read with fresh eyes and fix inline:
 
 1. Placeholders, TBDs, vague requirements
 2. Sections that contradict each other
-3. Requirements interpretable two ways — pick one, make it explicit
+3. Requirements interpretable two ways — ask the user; record their answer
 4. Scope too large for one plan — propose decomposition
 5. Assumptions that contradict what the repository actually does
 
-Then set `**Status:** Draft`, show the user where it lives, and ask them to review.
-**Stop and wait.** On an explicit yes, set `**Status:** Approved` and report back to
-the router. On requested changes, revise and ask again. Never start planning or
-implementation on an unapproved design.
+A design with an unanswered consequential question remains Draft or Blocked and
+is ineligible for planning; approval cannot waive this gate. Bounded
+non-material assumptions must be explicit decisions with evidence and an
+impact-if-false, never disguised open questions.
+
+Then set `**Status:** Draft`, show the user where it lives, and ask them to
+review the question-complete design. **Stop and wait.** On an explicit yes, set
+`**Status:** Approved` and report back to the router. On requested changes,
+revise and ask again. Never start planning or implementation on an unapproved
+design or one with unanswered questions.
